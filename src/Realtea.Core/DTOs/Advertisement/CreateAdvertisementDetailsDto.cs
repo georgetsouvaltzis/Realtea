@@ -1,19 +1,15 @@
 ﻿using Realtea.Domain.Enums;
 
-namespace Realtea.Domain.Entities
+namespace Realtea.Core.DTOs.Advertisement
 {
-    public class AdvertisementDetails : BaseEntity
+    public class CreateAdvertisementDetailsDto
     {
-        public Advertisement Advertisement { get; set; }
-        
-        public int AdvertisementId { get; set; }
-
         public DealType DealType { get; set; }
 
         public decimal Price { get; set; }
 
         public decimal SquareMeter { get; set; }
-        
+
         public Location Location { get; set; }
     }
 }

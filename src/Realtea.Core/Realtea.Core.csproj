@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Realtea.Infrastructure\Realtea.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

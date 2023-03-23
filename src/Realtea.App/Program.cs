@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Realtea.Infrastructure;
+using Realtea.Infrastructure.Seeder;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
+
 var app = builder.Build();
+
+DatabaseInitializer.Initialize(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
