@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Realtea.App.Models;
 using Realtea.Core.DTOs.Advertisement;
+using Realtea.Core.Models;
 using Realtea.Core.Services;
 
 namespace Realtea.App.Controllers.V1
 {
     [Route("/api/v1/[controller]")]
+    [Produces("application/json")]
     public class AdvertisementsController : ControllerBase
     {
         private readonly IAdvertisementService _advertisementService;
@@ -14,9 +17,18 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> GetAll([FromQuery] AdvertisementParams advertisementParams)
         {
-            return Ok(await _advertisementService.GetAllAsync());
+            var advertisementDescription = new AdvertisementDescription
+            {
+                DealType = advertisementParams.DealType,
+                Location = advertisementParams.Location,
+                PriceFrom = advertisementParams.PriceFrom,
+                PriceTo = advertisementParams.PriceTo,
+                SqFrom = advertisementParams.SqFrom,
+                SqTo = advertisementParams.SqTo
+            };
+            return Ok(await _advertisementService.GetAllAsync(advertisementDescription));
         }
 
         [HttpGet]

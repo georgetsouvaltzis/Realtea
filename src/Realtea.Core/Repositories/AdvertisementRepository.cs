@@ -23,6 +23,7 @@ namespace Realtea.Core.Repositories
 
         public async Task<IEnumerable<Advertisement>> GetAllAsync()
         {
+
             return await _db
                 .Advertisements
                 .Include(x => x.AdvertisementDetails)

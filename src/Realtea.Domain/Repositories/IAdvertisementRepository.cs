@@ -1,4 +1,5 @@
 ﻿using Realtea.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace Realtea.Domain.Repositories
 {
