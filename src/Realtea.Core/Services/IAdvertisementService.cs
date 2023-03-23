@@ -93,22 +93,23 @@ namespace Realtea.Core.Services
                     SquareMeter = x.AdvertisementDetails.SquareMeter,
                 }
             });
-            return (await _advertisementRepository.GetAllAsync())
-                .Select(x => new ReadAdvertisementDto
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    AdvertisementType = x.AdvertisementType,
-                    ReadAdvertisementDetailsDto = new ReadAdvertisementDetailsDto
-                    {
-                        Id = x.AdvertisementDetails.Id,
-                        DealType = x.AdvertisementDetails.DealType,
-                        Location = x.AdvertisementDetails.Location,
-                        Price = x.AdvertisementDetails.Price,
-                        SquareMeter = x.AdvertisementDetails.SquareMeter,
-                    }
-                });
+
+            //return (await _advertisementRepository.GetAllAsync())
+            //    .Select(x => new ReadAdvertisementDto
+            //    {
+            //        Id = x.Id,
+            //        Name = x.Name,
+            //        Description = x.Description,
+            //        AdvertisementType = x.AdvertisementType,
+            //        ReadAdvertisementDetailsDto = new ReadAdvertisementDetailsDto
+            //        {
+            //            Id = x.AdvertisementDetails.Id,
+            //            DealType = x.AdvertisementDetails.DealType,
+            //            Location = x.AdvertisementDetails.Location,
+            //            Price = x.AdvertisementDetails.Price,
+            //            SquareMeter = x.AdvertisementDetails.SquareMeter,
+            //        }
+            //    });
         }
 
         public async Task<ReadAdvertisementDto> GetByIdAsync(int id)
