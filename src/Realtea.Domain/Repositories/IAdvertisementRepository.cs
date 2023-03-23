@@ -4,6 +4,10 @@ namespace Realtea.Domain.Repositories
 {
     public interface IAdvertisementRepository
     {
-        Task AddAsync(Advertisement advertisement);
+        Task<int> AddAsync(Advertisement advertisement);
+
+        Task<IEnumerable<Advertisement>> GetAllAsync();
+
+        Task<Advertisement?> GetByIdAsync(int id);
     }
 }
