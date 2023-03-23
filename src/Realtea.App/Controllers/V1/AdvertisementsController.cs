@@ -20,7 +20,8 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int id)
+        [Route("{id:int}")]
+        public async Task<ActionResult> GetById(int id)
         {
             return Ok(await _advertisementService.GetByIdAsync(id));
         }

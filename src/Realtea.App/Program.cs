@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Realtea.Core.Repositories;
+using Realtea.Core.Services;
+using Realtea.Domain.Repositories;
 using Realtea.Infrastructure;
 using Realtea.Infrastructure.Seeder;
 
@@ -10,6 +13,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
+builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 
 builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
 

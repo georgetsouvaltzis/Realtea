@@ -15,6 +15,16 @@ namespace Realtea.Infrastructure
 
         public DbSet<AdvertisementDetails> AdvertisementsDetails { get; set; }
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Advertisement>()
+                .HasOne(x => x.AdvertisementDetails)
+                .WithOne(x => x.Advertisement)
+                .HasForeignKey<AdvertisementDetails>(x => x.AdvertisementId);
+
+            base.OnModelCreating(modelBuilder);
+        }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker
