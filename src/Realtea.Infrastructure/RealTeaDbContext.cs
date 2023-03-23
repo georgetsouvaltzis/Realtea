@@ -8,7 +8,7 @@ namespace Realtea.Infrastructure
     {
         public RealTeaDbContext(DbContextOptions<RealTeaDbContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<Advertisement> Advertisements { get; set; }
@@ -21,14 +21,14 @@ namespace Realtea.Infrastructure
                 .Entries<BaseEntity>()
                 .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
 
-            foreach(EntityEntry entityEntry in entries)
+            foreach (EntityEntry entityEntry in entries)
             {
                 var baseEntity = entityEntry.Entity as BaseEntity;
                 var now = DateTimeOffset.Now;
-                
+
                 baseEntity!.UpdatedAt = now;
 
-                if(entityEntry.State == EntityState.Added)
+                if (entityEntry.State == EntityState.Added)
                 {
                     baseEntity.CreatedAt = now;
                 }
