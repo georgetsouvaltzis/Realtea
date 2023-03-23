@@ -9,8 +9,8 @@
 
         public int Id { get; init; }
 
-        public DateTimeOffset CreatedAt { get; }
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public DateTimeOffset? UpdatedAt { get; }
+        public DateTimeOffset? UpdatedAt { get; set; }
     }
 }

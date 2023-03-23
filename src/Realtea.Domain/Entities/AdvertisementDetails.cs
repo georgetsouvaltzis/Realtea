@@ -13,6 +13,8 @@ namespace Realtea.Domain.Entities
         public decimal Price { get; set; }
 
         public decimal SquareMeter { get; set; }
+        
         public Location Location { get; set; }
+        
     }
 }
