@@ -24,7 +24,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>().AddEntityFrameworkStores
 
 var app = builder.Build();
 
-DatabaseInitializer.Initialize(app.Services);
+await DatabaseInitializer.InitializeAsync(app.Services);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

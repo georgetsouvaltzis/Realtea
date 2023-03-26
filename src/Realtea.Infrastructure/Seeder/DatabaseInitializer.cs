@@ -7,8 +7,7 @@ namespace Realtea.Infrastructure.Seeder
 {
     public static class DatabaseInitializer
     {
-
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
 
@@ -20,7 +19,7 @@ namespace Realtea.Infrastructure.Seeder
             if (db.Advertisements.Any()) return;
 
 
-            var result = userManager.CreateAsync(new User
+            var result = await userManager.CreateAsync(new User
             {
                 Id = 1,
                 UserName = "testUser",
@@ -74,9 +73,9 @@ namespace Realtea.Infrastructure.Seeder
                         }
                     }
                 }
-            }).GetAwaiter().GetResult();
+            });
             
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }
