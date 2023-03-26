@@ -13,5 +13,11 @@ namespace Realtea.Domain.Entities
         public AdvertisementDetails AdvertisementDetails { get; set; }
 
         public int AdvertisementDetailsId { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public User User { get; set; }
+
+        public int UserId { get; set; }
     }
 }
