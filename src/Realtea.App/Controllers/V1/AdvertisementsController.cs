@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Realtea.App.Models;
 using Realtea.Core.DTOs.Advertisement;
 using Realtea.Core.Models;
@@ -8,6 +10,7 @@ namespace Realtea.App.Controllers.V1
 {
     [Route("/api/v1/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class AdvertisementsController : ControllerBase
     {
         private readonly IAdvertisementService _advertisementService;

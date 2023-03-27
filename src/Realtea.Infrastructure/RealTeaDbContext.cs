@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Realtea.Domain.Entities;
 
 namespace Realtea.Infrastructure
 {
-    public class RealTeaDbContext : DbContext
+    public class RealTeaDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public RealTeaDbContext(DbContextOptions<RealTeaDbContext> options) : base(options)
         {
