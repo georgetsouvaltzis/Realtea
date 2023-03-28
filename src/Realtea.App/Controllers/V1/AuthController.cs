@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Realtea.Core.DTOs.Authentication;
+using Realtea.Core.Services;
 using Realtea.Domain.Entities;
 
 namespace Realtea.App.Controllers.V1
@@ -11,12 +12,14 @@ namespace Realtea.App.Controllers.V1
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IJwtProvider _jwtProvider;
+
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IJwtProvider jwtProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _jwtProvider = jwtProvider;
         }
-
 
         [HttpPost]
         [Route("register")]
@@ -44,7 +47,7 @@ namespace Realtea.App.Controllers.V1
             if (!result.Succeeded)
                 throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
 
-            await _signInManager.SignInAsync(newUser, false);
+            //await _signInManager.SignInAsync(newUser, false);
 
             return Ok();
         }
@@ -61,13 +64,16 @@ namespace Realtea.App.Controllers.V1
             if (existingUser == null)
                 throw new InvalidOperationException($"{loginUserDto.UserName} does not exist.");
 
-            var currentUser = HttpContext.User;
-            var fasdf = _signInManager.IsSignedIn(currentUser);
-            var result = await _signInManager.PasswordSignInAsync(existingUser, loginUserDto.Password, false, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(existingUser, loginUserDto.Password, false);
 
-            if (result.Succeeded)
-                return Ok();
-            throw new InvalidOperationException($"Failed to log in.");
+            if (!result.Succeeded)
+                throw new InvalidOperationException($"Failed to log in.");
+
+            var generatedToken = _jwtProvider.Generate(existingUser);
+
+            //await _signInManager.SignInAsync(existingUser, false);
+            return Ok(generatedToken);
+            
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Realtea.App.Controllers.V1
     [Route("/api/v1/[controller]")]
     [Produces("application/json")]
     [Authorize]
+
     public class AdvertisementsController : ControllerBase
     {
         private readonly IAdvertisementService _advertisementService;
@@ -22,6 +23,7 @@ namespace Realtea.App.Controllers.V1
         [HttpGet]
         public async Task<ActionResult> GetAll([FromQuery] AdvertisementParams advertisementParams)
         {
+            var context = HttpContext.User;
             var advertisementDescription = new AdvertisementDescription
             {
                 DealType = advertisementParams.DealType,
