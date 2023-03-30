@@ -10,5 +10,9 @@ namespace Realtea.Domain.Repositories
         Task<IEnumerable<Advertisement>> GetAllAsync();
 
         Task<Advertisement?> GetByIdAsync(int id);
+
+        Task InvalidateAsync(int id);
+
+        IQueryable<Advertisement?> GetByCondition(Expression<Func<Advertisement, bool>> expr = default);
     }
 }

@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Realtea.App.Authorization;
 using Realtea.Core.Repositories;
 using Realtea.Core.Services;
 using Realtea.Domain.Entities;
 using Realtea.Domain.Repositories;
 using Realtea.Infrastructure;
 using Realtea.Infrastructure.Seeder;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
@@ -34,6 +39,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 
 builder.Services.AddAuthentication(auth =>
 {
+
     auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,31 +49,39 @@ builder.Services.AddAuthentication(auth =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateIssuerSigningKey = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
             ValidIssuer = "iss",
             ValidAudience = "aud",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")),
-            ValidateLifetime = false,
-            ValidateActor = false,
-         
         };
     });
 
 builder.Services.AddAuthorization(options =>
 {
+    // https://stackoverflow.com/questions/45807822/asp-net-core-2-0-jwt-validation-fails-with-authorization-failed-for-user-null
     var builder = new AuthorizationPolicyBuilder();
+
     builder.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+
     builder.RequireAuthenticatedUser();
+
     options.DefaultPolicy = builder.Build();
 
+
+    options.AddPolicy("IsEligibleForAdvertisementDelete", policy =>
+    {
+        policy.AddRequirements(new IsEligibleForAdvertisementDeleteRequirement());
+    });
 });
-//builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteAuthHandler>();
 
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
 

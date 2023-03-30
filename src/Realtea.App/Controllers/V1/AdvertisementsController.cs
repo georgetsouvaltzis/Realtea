@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Realtea.App.Authorization;
 using Realtea.App.Models;
 using Realtea.Core.DTOs.Advertisement;
 using Realtea.Core.Models;
@@ -10,14 +12,16 @@ namespace Realtea.App.Controllers.V1
 {
     [Route("/api/v1/[controller]")]
     [Produces("application/json")]
-    [Authorize]
-
     public class AdvertisementsController : ControllerBase
     {
         private readonly IAdvertisementService _advertisementService;
-        public AdvertisementsController(IAdvertisementService advertisementService)
+        private readonly IAuthorizationService _authorizationService;
+
+        public AdvertisementsController(IAdvertisementService advertisementService,
+            IAuthorizationService authorizationService)
         {
             _advertisementService = advertisementService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -44,11 +48,37 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpPost]
+        [Authorize]
+        // currently it uses no authorized value of ID. Need to refactor it.
         public async Task<ActionResult> Add([FromBody] CreateAdvertisementDto createAdvertisementDto)
         {
-            var result = await _advertisementService.AddAsync(createAdvertisementDto);
 
+            // Determine Whether is user authorized or not to Add Any extra ads.
+            var userId = Convert.ToInt32(User.FindFirstValue("sub"));
+            var result = await _advertisementService.AddAsync(createAdvertisementDto, userId);
             return CreatedAtRoute(nameof(GetById), result);
+        }
+
+        [HttpDelete]
+        [Authorize]
+        [Route("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var existingAd = await _advertisementService.GetByIdAsync(id);
+
+
+            var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementDeleteRequirement());
+            //var result = await _authorizationService.AuthorizeAsync(User, existingAd, "IsEligibleForAdvertisementDelete");
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var userId = Convert.ToInt32(User.FindFirstValue("sub"));
+            await _advertisementService.InvalidateAsync(id);
+
+            return NoContent();
         }
     }
 }

@@ -13,16 +13,20 @@ namespace Realtea.Infrastructure.Seeder
 
             var db = scope.ServiceProvider.GetRequiredService<RealTeaDbContext>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
             if (!db.Database.EnsureCreated()) return;
 
             if (db.Advertisements.Any()) return;
 
 
-            var result = await userManager.CreateAsync(new User
+            await roleManager.CreateAsync(new IdentityRole<int> { Name = "Normal" });
+            await roleManager.CreateAsync(new IdentityRole<int> { Name = "Broker" });
+
+            var user = new User
             {
                 Id = 1,
-                UserName = "testUser",
+                UserName = "testuser",
                 Advertisements = new List<Advertisement>
                 {
                     new Advertisement
@@ -71,11 +75,46 @@ namespace Realtea.Infrastructure.Seeder
                             Location = Location.Batumi,
                             SquareMeter = 80.7m,
                         }
-                    }
+                    },
+                    new Advertisement
+                    {
+                        Id = 4,
+                        Name = "Newly-constructed house with pool is on rent",
+                        Description = "Newly constructed house in Batumi with pool and veranda is available for rent. It is ideal for people that are willing to celebrate their" +
+                        "birthdays or want to organize a party with their friends",
+                        AdvertisementDetails = new AdvertisementDetails
+                        {
+                            Id = 4,
+                            AdvertisementId = 4,
+                            DealType = DealType.Rental,
+                            Price = 1000.0m,
+                            Location = Location.Batumi,
+                            SquareMeter = 451.6m,
+                        }
+                    },
+                    new Advertisement
+                    {
+                        Id = 5,
+                        Name = "Flat on sale in Tbilisi center",
+                        Description = "nice and cozy flat is on sale right in the center of capital Tbilisi, Tchavtchavadze avenue. flat is on 22nd floor with stunning views.",
+                        AdvertisementDetails = new AdvertisementDetails
+                        {
+                            Id = 5,
+                            AdvertisementId = 5,
+                            DealType = DealType.Sale,
+                            Price = 175000m,
+                            Location = Location.Tbilisi,
+                            SquareMeter = 87.1m,
+                        }
+                    },
                 }
-            });
-            
+            };
+
+            var result = userManager.CreateAsync(user, "Test1");
             await db.SaveChangesAsync();
+
+            await userManager.AddToRoleAsync(user, "Normal");
         }
+
     }
 }

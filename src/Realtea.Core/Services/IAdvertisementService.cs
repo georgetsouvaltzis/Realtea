@@ -1,32 +1,44 @@
-﻿using Realtea.Core.DTOs.Advertisement;
+﻿using Microsoft.AspNetCore.Identity;
+using Realtea.Core.DTOs.Advertisement;
 using Realtea.Core.Models;
 using Realtea.Domain.Entities;
 using Realtea.Domain.Repositories;
+using Realtea.Infrastructure;
 
 namespace Realtea.Core.Services
 {
     public interface IAdvertisementService
     {
-        Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto);
+        Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto, int userId);
 
         Task<ReadAdvertisementDto> GetByIdAsync(int id);
 
         Task<IEnumerable<ReadAdvertisementDto>> GetAllAsync(AdvertisementDescription advertisementDescription);
+
+        Task InvalidateAsync(int id);
     }
 
     public class AdvertisementService : IAdvertisementService
     {
         private readonly IAdvertisementRepository _advertisementRepository;
 
-        public AdvertisementService(IAdvertisementRepository advertisementRepository)
+        private readonly UserManager<User> _userManager;
+
+        public AdvertisementService(IAdvertisementRepository advertisementRepository, UserManager<User> userManager)
         {
             _advertisementRepository = advertisementRepository;
+            _userManager = userManager;
         }
 
-        public async Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto)
+        public async Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto, int userId)
         {
             _ = createAdvertisementDto ?? throw new ArgumentNullException(nameof(createAdvertisementDto));
             _ = createAdvertisementDto.CreateAdvertisementDetailsDto ?? throw new ArgumentNullException(nameof(createAdvertisementDto.CreateAdvertisementDetailsDto));
+
+            var existingUser = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (existingUser == null)
+                throw new InvalidOperationException(nameof(existingUser));
 
             if (string.IsNullOrEmpty(createAdvertisementDto.Name))
             {
@@ -38,9 +50,18 @@ namespace Realtea.Core.Services
                 throw new InvalidOperationException(nameof(createAdvertisementDto.Description));
             }
 
+            var another = _advertisementRepository.GetAllAsync().GetAwaiter().GetResult().Where(x => x.UserId == existingUser.Id).Count();
+            // Need to change this logic so it returns IEnumerable
+            //var existingAdCount = _advertisementRepository.GetByCondition(x => x.Id == existingUser.Id).Count();
+
+            // Can move to domain later.
+            if (another >= 5 && existingUser.UserType == Domain.Enums.UserType.Regular)
+                throw new InvalidOperationException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.");
+
             var newAdvertisement = new Advertisement
             {
                 Name = createAdvertisementDto.Name,
+                UserId = existingUser.Id,
                 Description = createAdvertisementDto.Description,
                 AdvertisementDetails = new AdvertisementDetails
                 {
@@ -58,6 +79,7 @@ namespace Realtea.Core.Services
 
         public async Task<IEnumerable<ReadAdvertisementDto>> GetAllAsync(AdvertisementDescription advertisementDescription)
         {
+
             var f = await _advertisementRepository.GetAllAsync();
             
             if (advertisementDescription.DealType != null)
@@ -105,6 +127,7 @@ namespace Realtea.Core.Services
             return new ReadAdvertisementDto
             {
                 Id = existingAd.Id,
+                UserId = existingAd.UserId,
                 Name = existingAd.Name,
                 Description = existingAd.Description,
                 AdvertisementType = existingAd.AdvertisementType,
@@ -117,6 +140,16 @@ namespace Realtea.Core.Services
                     SquareMeter = existingAd.AdvertisementDetails.SquareMeter,
                 }
             };
+        }
+
+        public async Task InvalidateAsync(int id)
+        {
+            var existingAd = await _advertisementRepository.GetByIdAsync(id);
+
+            if (existingAd == null)
+                throw new InvalidOperationException(nameof(existingAd));
+
+            await _advertisementRepository.InvalidateAsync(id);
         }
     }
 }

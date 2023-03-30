@@ -12,13 +12,16 @@ namespace Realtea.App.Controllers.V1
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+
         private readonly IJwtProvider _jwtProvider;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IJwtProvider jwtProvider)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<int>> roleManager, IJwtProvider jwtProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtProvider = jwtProvider;
+            _roleManager = roleManager;
         }
 
         [HttpPost]
@@ -42,19 +45,18 @@ namespace Realtea.App.Controllers.V1
                 UserName = registerUserDto.UserName,
             };
 
+
             var result = await _userManager.CreateAsync(newUser, registerUserDto.Password);
 
             if (!result.Succeeded)
                 throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
 
-            //await _signInManager.SignInAsync(newUser, false);
-
             return Ok();
         }
-
+       
         [HttpPost]
-        [Route("login")]
-        public async Task<ActionResult> Login([FromBody] LoginUserDto loginUserDto)
+        [Route("generatetoken")]
+        public async Task<ActionResult> GenerateToken([FromBody] LoginUserDto loginUserDto)
         {
             if (loginUserDto == null)
                 throw new ArgumentNullException(nameof(loginUserDto));
@@ -71,9 +73,8 @@ namespace Realtea.App.Controllers.V1
 
             var generatedToken = _jwtProvider.Generate(existingUser);
 
-            //await _signInManager.SignInAsync(existingUser, false);
             return Ok(generatedToken);
-            
+
         }
     }
 }

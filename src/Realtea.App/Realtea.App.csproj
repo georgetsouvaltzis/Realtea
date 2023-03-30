@@ -16,4 +16,10 @@
     <ProjectReference Include="..\Realtea.Core\Realtea.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Authorization\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Authorization\" />
+  </ItemGroup>
 </Project>

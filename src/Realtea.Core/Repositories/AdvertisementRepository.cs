@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Realtea.Domain.Entities;
 using Realtea.Domain.Repositories;
 using Realtea.Infrastructure;
@@ -8,6 +9,7 @@ namespace Realtea.Core.Repositories
     public class AdvertisementRepository : IAdvertisementRepository
     {
         private readonly RealTeaDbContext _db;
+
         public AdvertisementRepository(RealTeaDbContext dbContext)
         {
             _db = dbContext;
@@ -19,6 +21,17 @@ namespace Realtea.Core.Repositories
             await _db.SaveChangesAsync();
 
             return advertisement.Id;
+        }
+
+        public async Task InvalidateAsync(int id)
+        {
+            var existingAd = await GetByIdAsync(id);
+
+            existingAd!.IsActive = false;
+
+            _db.Entry<Advertisement>(existingAd).State = EntityState.Modified;
+
+            await _db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Advertisement>> GetAllAsync()
@@ -38,6 +51,15 @@ namespace Realtea.Core.Repositories
                 .Include(x => x.AdvertisementDetails)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+
+        }
+        public IQueryable<Advertisement?> GetByCondition(Expression<Func<Advertisement, bool>> expr = default)
+        {
+            return _db
+                .Advertisements
+                .Include(x => x.AdvertisementDetails)
+                .Where(expr);
         }
     }
 }
