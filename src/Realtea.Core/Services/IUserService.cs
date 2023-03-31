@@ -27,7 +27,6 @@ namespace Realtea.Core.Services
         {
             _userManager = userManager;
             _dbContext = context;
-
         }
 
         public async Task UpdateAccountAsync(string userId)

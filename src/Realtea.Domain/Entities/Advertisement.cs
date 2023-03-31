@@ -19,5 +19,8 @@ namespace Realtea.Domain.Entities
         public User User { get; set; }
 
         public int UserId { get; set; }
+
+        // if IsActive = false, Should be null.
+        public DateTimeOffset? ÍActiveUntil { get; set; }
     }
 }

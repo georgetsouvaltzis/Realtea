@@ -40,6 +40,7 @@ namespace Realtea.Core.Repositories
             return await _db
                 .Advertisements
                 .Include(x => x.AdvertisementDetails)
+                .Include(x => x.User)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -49,6 +50,7 @@ namespace Realtea.Core.Repositories
             return await _db
                 .Advertisements
                 .Include(x => x.AdvertisementDetails)
+                .Include(x => x.User)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 

@@ -48,6 +48,8 @@ namespace Realtea.App.Controllers.V1
         [HttpPost]
         [Authorize]
         // currently it uses no authorized value of ID. Need to refactor it.
+        // Probably add event that in case user adds Paid ad,
+        // Make it appear on top?
         public async Task<ActionResult> Add([FromBody] CreateAdvertisementDto createAdvertisementDto)
         {
             // Determine Whether is user authorized or not to Add Any extra ads.

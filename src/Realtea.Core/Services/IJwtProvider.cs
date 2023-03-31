@@ -21,13 +21,15 @@ namespace Realtea.Core.Services
             _userManager = userManager;
         }
 
+    
+        /// TODO: When user updates their account type, they should get updated data.   
         public string Generate(User user)
         {
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")), SecurityAlgorithms.HmacSha256);
 
             var role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Single();
             var claims = new Claim[]
-            {
+            {            
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim("role", role)
             };

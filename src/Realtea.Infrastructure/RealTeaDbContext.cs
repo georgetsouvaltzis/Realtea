@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Realtea.Domain.Entities;
 
 namespace Realtea.Infrastructure
@@ -12,11 +13,12 @@ namespace Realtea.Infrastructure
         {
             
         }
-
+        
         public DbSet<Advertisement> Advertisements { get; set; }
 
         public DbSet<AdvertisementDetails> AdvertisementsDetails { get; set; }
 
+        public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
