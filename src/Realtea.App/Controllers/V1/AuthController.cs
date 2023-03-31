@@ -5,10 +5,8 @@ using Realtea.Core.Services;
 using Realtea.Domain.Entities;
 
 namespace Realtea.App.Controllers.V1
-{
-    [Route("/api/v1/[controller]")]
-    [Produces("application/json")]
-    public class AuthController : ControllerBase
+{    
+    public class AuthController : V1ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -45,7 +43,6 @@ namespace Realtea.App.Controllers.V1
                 UserName = registerUserDto.UserName,
             };
 
-
             var result = await _userManager.CreateAsync(newUser, registerUserDto.Password);
 
             if (!result.Succeeded)
@@ -74,7 +71,6 @@ namespace Realtea.App.Controllers.V1
             var generatedToken = _jwtProvider.Generate(existingUser);
 
             return Ok(generatedToken);
-
         }
     }
 }

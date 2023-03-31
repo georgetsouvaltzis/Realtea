@@ -14,6 +14,8 @@ namespace Realtea.Core.DTOs.Advertisement
 
         public AdvertisementType AdvertisementType { get; set; }
 
+        public bool IsActive { get; set; }
+
         public ReadAdvertisementDetailsDto ReadAdvertisementDetailsDto { get; set; }
     }
 }

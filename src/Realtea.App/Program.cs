@@ -77,7 +77,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteAuthHandler>();
-
+builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementUpdateAuthHandler>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();

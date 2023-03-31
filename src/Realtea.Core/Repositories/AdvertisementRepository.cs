@@ -61,5 +61,14 @@ namespace Realtea.Core.Repositories
                 .Include(x => x.AdvertisementDetails)
                 .Where(expr);
         }
+
+        public async Task<Advertisement> UpdateAsync(Advertisement advertisement)
+        {
+            _db.Advertisements.Update(advertisement);
+
+            await _db.SaveChangesAsync();
+
+            return advertisement;
+        }
     }
 }

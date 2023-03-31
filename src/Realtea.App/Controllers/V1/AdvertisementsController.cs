@@ -10,9 +10,7 @@ using Realtea.Core.Services;
 
 namespace Realtea.App.Controllers.V1
 {
-    [Route("/api/v1/[controller]")]
-    [Produces("application/json")]
-    public class AdvertisementsController : ControllerBase
+    public class AdvertisementsController : V1ControllerBase
     {
         private readonly IAdvertisementService _advertisementService;
         private readonly IAuthorizationService _authorizationService;
@@ -52,11 +50,10 @@ namespace Realtea.App.Controllers.V1
         // currently it uses no authorized value of ID. Need to refactor it.
         public async Task<ActionResult> Add([FromBody] CreateAdvertisementDto createAdvertisementDto)
         {
-
             // Determine Whether is user authorized or not to Add Any extra ads.
             var userId = Convert.ToInt32(User.FindFirstValue("sub"));
             var result = await _advertisementService.AddAsync(createAdvertisementDto, userId);
-            return CreatedAtRoute(nameof(GetById), result);
+            return CreatedAtAction(nameof(GetById), new {id = result }, result);
         }
 
         [HttpDelete]
@@ -66,9 +63,7 @@ namespace Realtea.App.Controllers.V1
         {
             var existingAd = await _advertisementService.GetByIdAsync(id);
 
-
             var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementDeleteRequirement());
-            //var result = await _authorizationService.AuthorizeAsync(User, existingAd, "IsEligibleForAdvertisementDelete");
 
             if (!result.Succeeded)
             {
@@ -79,6 +74,26 @@ namespace Realtea.App.Controllers.V1
             await _advertisementService.InvalidateAsync(id);
 
             return NoContent();
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("{id:int}")]
+        public async Task<ActionResult> Update(int id, [FromBody] UpdateAdvertisementDto dto)
+        {
+            var existingAd = await _advertisementService.GetByIdAsync(id);
+
+            var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementUpdateRequirement());
+
+            if (!result.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var userId = Convert.ToInt32(User.FindFirstValue("sub"));
+            var updatedAd = await _advertisementService.UpdateAsync(id, userId, dto);
+
+            return Ok(updatedAd);
         }
     }
 }

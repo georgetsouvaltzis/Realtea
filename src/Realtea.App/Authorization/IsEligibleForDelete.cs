@@ -14,6 +14,28 @@ namespace Realtea.App.Authorization
 
     }
 
+    public class IsEligibleForAdvertisementUpdateRequirement : IAuthorizationRequirement
+    {
+
+    }
+
+
+    public class IsEligibleForAdvertisementUpdateAuthHandler : AuthorizationHandler<IsEligibleForAdvertisementUpdateRequirement, ReadAdvertisementDto>
+    {
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsEligibleForAdvertisementUpdateRequirement requirement, ReadAdvertisementDto resource)
+        {
+            var userId = Convert.ToInt32(context.User.FindFirstValue("sub"));
+
+            if(resource.UserId == userId)
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
+            context.Fail();
+            return Task.CompletedTask;
+        }
+    }
 
     public class IsEligibleForAdvertisementDeleteAuthHandler : AuthorizationHandler<IsEligibleForAdvertisementDeleteRequirement, ReadAdvertisementDto>
     {

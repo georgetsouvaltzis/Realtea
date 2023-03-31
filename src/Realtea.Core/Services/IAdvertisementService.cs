@@ -16,6 +16,8 @@ namespace Realtea.Core.Services
         Task<IEnumerable<ReadAdvertisementDto>> GetAllAsync(AdvertisementDescription advertisementDescription);
 
         Task InvalidateAsync(int id);
+
+        Task<UpdateAdvertisementDto> UpdateAsync(int id, int userId, UpdateAdvertisementDto updateAdvertisementDto);
     }
 
     public class AdvertisementService : IAdvertisementService
@@ -131,6 +133,7 @@ namespace Realtea.Core.Services
                 Name = existingAd.Name,
                 Description = existingAd.Description,
                 AdvertisementType = existingAd.AdvertisementType,
+                IsActive = existingAd.IsActive,
                 ReadAdvertisementDetailsDto = new ReadAdvertisementDetailsDto
                 {
                     Id = existingAd.AdvertisementDetails.Id,
@@ -150,6 +153,45 @@ namespace Realtea.Core.Services
                 throw new InvalidOperationException(nameof(existingAd));
 
             await _advertisementRepository.InvalidateAsync(id);
+        }
+
+        public async Task<UpdateAdvertisementDto> UpdateAsync(int id, int userId, UpdateAdvertisementDto updateAdvertisementDto)
+        {
+            var existingAd = await _advertisementRepository.GetByIdAsync(id);
+
+            if (existingAd == null)
+                throw new InvalidOperationException(nameof(existingAd));
+
+
+            existingAd.Name = updateAdvertisementDto.Name ?? existingAd.Name;
+            existingAd.Description = updateAdvertisementDto.Description ?? existingAd.Description;
+            existingAd.IsActive = updateAdvertisementDto.IsActive ?? existingAd.IsActive;
+
+            if (updateAdvertisementDto.UpdateAdvertisementDetailsDto != null)
+            {
+                existingAd.AdvertisementDetails.DealType = updateAdvertisementDto.UpdateAdvertisementDetailsDto.DealType ?? existingAd.AdvertisementDetails.DealType;
+                existingAd.AdvertisementDetails.Location = updateAdvertisementDto.UpdateAdvertisementDetailsDto.Location ?? existingAd.AdvertisementDetails.Location;
+                existingAd.AdvertisementDetails.Price = updateAdvertisementDto.UpdateAdvertisementDetailsDto.Price ?? existingAd.AdvertisementDetails.Price;
+                existingAd.AdvertisementDetails.SquareMeter = updateAdvertisementDto.UpdateAdvertisementDetailsDto.Price ?? existingAd.AdvertisementDetails.Price;
+            }
+
+
+            var modifiedAd = await _advertisementRepository.UpdateAsync(existingAd);
+
+            return new UpdateAdvertisementDto
+            {
+                Name = modifiedAd.Name,
+                Description = modifiedAd.Description,
+                IsActive = modifiedAd.IsActive,
+                AdvertisementType = modifiedAd.AdvertisementType,
+                UpdateAdvertisementDetailsDto = new UpdateAdvertisementDetailsDto
+                {
+                    DealType = modifiedAd.AdvertisementDetails.DealType,
+                    Location = modifiedAd.AdvertisementDetails.Location,
+                    SquareMeter = modifiedAd.AdvertisementDetails.SquareMeter,
+                    Price = modifiedAd.AdvertisementDetails.Price,
+                }
+            };
         }
     }
 }
