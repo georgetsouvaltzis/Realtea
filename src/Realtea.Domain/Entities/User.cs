@@ -8,27 +8,20 @@ namespace Realtea.Domain.Entities
         public ICollection<Advertisement> Advertisements { get; set; }
 
         public UserType UserType { get; set; }
+
+        public ICollection<Payment> Payments { get; set; }
+
+        public UserBalance UserBalance { get; set; }
+        public int UserBalanceId { get; set; }
     }
 
-    public class Payment : BaseEntity
+    public class UserBalance
     {
-        public User User { get; set; }
         public int UserId { get; set; }
+        public User User { get; set; }
 
-        public PaymentDetail PaymentDetail { get; set; }
+        public decimal Balance { get; set; }
 
-        public DateTimeOffset PaymentMadeAt { get; set; }
-
-        public decimal PaidAmount { get; set; }
-
-        // For which Ad it was paid who.
-        public Advertisement Advertisement { get; set; }
-        public int AdvertisementId { get; set; }
-    }
-
-    public enum PaymentDetail
-    {
-        Cash = 0,
-        Card = 1
+        public bool IsCapableOfPayment => Balance - 0.20m >= 0.0m;
     }
 }

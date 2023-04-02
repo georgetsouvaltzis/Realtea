@@ -80,6 +80,7 @@ builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDele
 builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementUpdateAuthHandler>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IUserService, UserService>();
 

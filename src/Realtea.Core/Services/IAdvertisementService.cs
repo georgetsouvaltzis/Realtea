@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Realtea.Core.DTOs.Advertisement;
 using Realtea.Core.Models;
+using Realtea.Core.Repositories;
 using Realtea.Domain.Entities;
 using Realtea.Domain.Repositories;
 using Realtea.Infrastructure;
@@ -18,18 +19,23 @@ namespace Realtea.Core.Services
         Task InvalidateAsync(int id);
 
         Task<UpdateAdvertisementDto> UpdateAsync(int id, int userId, UpdateAdvertisementDto updateAdvertisementDto);
+
+        Task<IEnumerable<Advertisement>> GetActiveAdsOrderedByPaidAds();
     }
 
     public class AdvertisementService : IAdvertisementService
     {
         private readonly IAdvertisementRepository _advertisementRepository;
+        private readonly IPaymentRepository _paymentRepository;
 
         private readonly UserManager<User> _userManager;
 
-        public AdvertisementService(IAdvertisementRepository advertisementRepository, UserManager<User> userManager)
+        public AdvertisementService(IAdvertisementRepository advertisementRepository, UserManager<User> userManager,
+            IPaymentRepository paymentRepository)
         {
             _advertisementRepository = advertisementRepository;
             _userManager = userManager;
+            _paymentRepository = paymentRepository;
         }
 
         public async Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto, int userId)
@@ -57,8 +63,26 @@ namespace Realtea.Core.Services
             //var existingAdCount = _advertisementRepository.GetByCondition(x => x.Id == existingUser.Id).Count();
 
             // Can move to domain later.
-            if (another >= 5 && existingUser.UserType == Domain.Enums.UserType.Regular)
+            if (another >= 5 && existingUser.UserType == Domain.Enums.UserType.Regular && createAdvertisementDto.AdvertisementType == Domain.Enums.AdvertisementType.Free)
                 throw new InvalidOperationException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.");
+
+            if (createAdvertisementDto.AdvertisementType == Domain.Enums.AdvertisementType.Paid)
+            {
+                if (!existingUser.UserBalance.IsCapableOfPayment)
+                {
+                    throw new InvalidOperationException("Insufficient balance.");
+                }
+
+                existingUser.UserBalance.Balance -= 0.20m;
+                await _paymentRepository.CreateAsync(new Payment
+                {
+                    PaidAmount = 0.20m,
+                    //AdvertisementId = 100,// Should fire an Event in order to notify about payment and update user/ad?.
+                    PaymentDetail = Domain.Enums.PaymentDetail.Balance,
+                    PaymentMadeAt = DateTimeOffset.UtcNow,
+                    UserId = userId,
+                });
+            }
 
             var newAdvertisement = new Advertisement
             {
@@ -83,7 +107,7 @@ namespace Realtea.Core.Services
         {
 
             var f = await _advertisementRepository.GetAllAsync();
-            
+
             if (advertisementDescription.DealType != null)
                 f = f.Where(x => x.AdvertisementDetails.DealType == advertisementDescription.DealType);
 
@@ -101,7 +125,7 @@ namespace Realtea.Core.Services
 
             if (advertisementDescription.Location.HasValue)
                 f = f.Where(x => x.AdvertisementDetails.Location == advertisementDescription.Location);
-            
+
             return f.Select(x => new ReadAdvertisementDto
             {
                 Id = x.Id,
@@ -119,10 +143,24 @@ namespace Realtea.Core.Services
             });
         }
 
+        public async Task<IEnumerable<Advertisement>> GetActiveAdsOrderedByPaidAds()
+        {
+            var now = DateTimeOffset.UtcNow;
+
+            var ads = _advertisementRepository
+                .GetByCondition(x => x.IsActive && x.IsActiveUntil != null && x.IsActiveUntil <= now)
+                .OrderByDescending(x => x.AdvertisementType)
+                .ToList();
+
+
+            // Should map to DTO and send it back.
+            return Enumerable.Empty<Advertisement>();
+        }
+
         public async Task<ReadAdvertisementDto> GetByIdAsync(int id)
         {
             var existingAd = await _advertisementRepository.GetByIdAsync(id);
-            
+
             if (existingAd == null)
                 throw new InvalidOperationException(nameof(existingAd));
 

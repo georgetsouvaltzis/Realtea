@@ -36,7 +36,6 @@ namespace Realtea.Core.Repositories
 
         public async Task<IEnumerable<Advertisement>> GetAllAsync()
         {
-
             return await _db
                 .Advertisements
                 .Include(x => x.AdvertisementDetails)
@@ -61,6 +60,7 @@ namespace Realtea.Core.Repositories
             return _db
                 .Advertisements
                 .Include(x => x.AdvertisementDetails)
+                .Include(x => x.User)
                 .Where(expr);
         }
 

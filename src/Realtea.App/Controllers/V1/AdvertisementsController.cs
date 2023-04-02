@@ -22,6 +22,7 @@ namespace Realtea.App.Controllers.V1
             _authorizationService = authorizationService;
         }
 
+        // should update Based on IsActive, Desc/asc, etc.
         [HttpGet]
         public async Task<ActionResult> GetAll([FromQuery] AdvertisementParams advertisementParams)
         {
@@ -54,7 +55,10 @@ namespace Realtea.App.Controllers.V1
         {
             // Determine Whether is user authorized or not to Add Any extra ads.
             var userId = Convert.ToInt32(User.FindFirstValue("sub"));
+
+            //return RedirectToAction("MakePayment", "Payments", new { advertisementId = 1 });
             var result = await _advertisementService.AddAsync(createAdvertisementDto, userId);
+
             return CreatedAtAction(nameof(GetById), new {id = result }, result);
         }
 

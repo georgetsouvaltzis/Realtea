@@ -45,9 +45,7 @@ namespace Realtea.App.Controllers.V1
 
             var result = await _userManager.CreateAsync(newUser, registerUserDto.Password);
 
-
             // TODO: Try to send email?
-
             if (!result.Succeeded)
                 throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
 

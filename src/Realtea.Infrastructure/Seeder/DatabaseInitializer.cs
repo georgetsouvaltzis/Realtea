@@ -27,6 +27,11 @@ namespace Realtea.Infrastructure.Seeder
             {
                 Id = 1,
                 UserName = "testuser",
+                UserBalance = new UserBalance
+                {
+                    Balance = 10.0m,
+                    UserId = 1
+                },
                 Advertisements = new List<Advertisement>
                 {
                     new Advertisement
