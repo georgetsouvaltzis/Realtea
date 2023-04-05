@@ -5,11 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Realtea.App.Authorization;
+using Realtea.Core.Entities;
+using Realtea.Core.Interfaces;
+using Realtea.Core.Interfaces.Repositories;
+using Realtea.Core.Interfaces.Services;
 using Realtea.Core.Repositories;
 using Realtea.Core.Services;
-using Realtea.Domain.Entities;
-using Realtea.Domain.Repositories;
 using Realtea.Infrastructure;
+using Realtea.Infrastructure.Identity;
+using Realtea.Infrastructure.Identity.Authentication;
+using Realtea.Infrastructure.Repositories;
 using Realtea.Infrastructure.Seeder;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -26,7 +31,7 @@ builder.Services.AddSwaggerGen();
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 1;

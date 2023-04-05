@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Realtea.Domain.Entities;
-using Realtea.Domain.Enums;
+using Realtea.Core.Entities;
+using Realtea.Core.Enums;
 
 namespace Realtea.Infrastructure.Seeder
 {

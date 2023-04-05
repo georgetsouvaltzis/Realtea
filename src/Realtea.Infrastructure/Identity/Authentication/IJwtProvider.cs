@@ -1,12 +1,13 @@
-﻿using System;
+﻿
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Realtea.Domain.Entities;
+using Realtea.Core.Entities;
 
-namespace Realtea.Core.Services
+namespace Realtea.Infrastructure.Identity.Authentication
 {
     public interface IJwtProvider
     {
@@ -20,7 +21,6 @@ namespace Realtea.Core.Services
         {
             _userManager = userManager;
         }
-
     
         /// TODO: When user updates their account type, they should get updated data.   
         public string Generate(User user)
@@ -31,7 +31,7 @@ namespace Realtea.Core.Services
             var claims = new Claim[]
             {            
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("role", role)
+                new Claim(type: "role", role)
             };
 
             var token = new JwtSecurityToken(

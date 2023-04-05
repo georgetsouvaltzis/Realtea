@@ -1,13 +1,10 @@
 ﻿using System;
-using Realtea.Domain.Entities;
-using Realtea.Infrastructure;
+using Realtea.Core.Entities;
+using Realtea.Core.Interfaces.Repositories;
+using Realtea.Core.Repositories;
 
-namespace Realtea.Core.Repositories
+namespace Realtea.Infrastructure.Repositories
 {
-	public interface IPaymentRepository
-	{
-		Task CreateAsync(Payment payment);
-	}
     public class PaymentRepository : IPaymentRepository
     {
         private readonly RealTeaDbContext _db;
@@ -21,6 +18,12 @@ namespace Realtea.Core.Repositories
         {
             await _db.Payments.AddAsync(payment);
             await _db.SaveChangesAsync();
+        }
+
+
+        public IQueryable<Payment> GetPaymentsQueryable()
+        {
+            return _db.Payments.AsQueryable();
         }
     }
 }

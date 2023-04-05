@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Realtea.Core.DTOs.Authentication;
+using Realtea.Core.Entities;
 using Realtea.Core.Services;
-using Realtea.Domain.Entities;
+using Realtea.Infrastructure.Identity.Authentication;
 
 namespace Realtea.App.Controllers.V1
 {    
@@ -36,7 +37,6 @@ namespace Realtea.App.Controllers.V1
 
             if (existingUser != null)
                 throw new InvalidOperationException($"{registerUserDto.UserName} is taken.");
-
 
             var newUser = new User
             {

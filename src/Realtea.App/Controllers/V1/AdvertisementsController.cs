@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Realtea.App.Authorization;
 using Realtea.App.Models;
 using Realtea.Core.DTOs.Advertisement;
+using Realtea.Core.Interfaces;
 using Realtea.Core.Models;
+using Realtea.Core.Enums;
 using Realtea.Core.Services;
 
 namespace Realtea.App.Controllers.V1
@@ -26,7 +27,6 @@ namespace Realtea.App.Controllers.V1
         [HttpGet]
         public async Task<ActionResult> GetAll([FromQuery] AdvertisementParams advertisementParams)
         {
-            var context = HttpContext.User;
             var advertisementDescription = new AdvertisementDescription
             {
                 DealType = advertisementParams.DealType,

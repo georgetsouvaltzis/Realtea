@@ -1,6 +1,7 @@
-﻿using Realtea.Domain.Enums;
+﻿using System;
+using Realtea.Core.Enums;
 
-namespace Realtea.Domain.Entities
+namespace Realtea.Core.Entities
 {
     public class Payment : BaseEntity
     {
@@ -18,3 +19,4 @@ namespace Realtea.Domain.Entities
         //public int AdvertisementId { get; set; }
     }
 }
+

@@ -7,11 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <None Remove="Entities\" />
+    <None Remove="Exceptions\" />
+    <None Remove="Interfaces\" />
+    <None Remove="Interfaces\Repositories\" />
+    <None Remove="Enums\" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Realtea.Infrastructure\Realtea.Infrastructure.csproj" />
+    <Folder Include="Entities\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Interfaces\Repositories\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Interfaces\Services\" />
   </ItemGroup>
-
 </Project>

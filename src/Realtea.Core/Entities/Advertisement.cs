@@ -1,15 +1,16 @@
-﻿using Realtea.Domain.Enums;
+﻿using System;
+using Realtea.Core.Enums;
 
-namespace Realtea.Domain.Entities
+namespace Realtea.Core.Entities
 {
-    public class Advertisement : BaseEntity
-    {
+	public class Advertisement : BaseEntity
+	{
         public string Name { get; set; } = string.Empty;
-        
+
         public string Description { get; set; } = string.Empty;
-        
+
         public AdvertisementType AdvertisementType { get; set; } = AdvertisementType.Free;
-        
+
         public AdvertisementDetails AdvertisementDetails { get; set; }
 
         public int AdvertisementDetailsId { get; set; }
@@ -24,3 +25,4 @@ namespace Realtea.Domain.Entities
         public DateTimeOffset? IsActiveUntil { get; set; }
     }
 }
+

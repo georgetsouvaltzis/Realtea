@@ -1,41 +1,37 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+
 using Realtea.Core.DTOs.Advertisement;
+using Realtea.Core.Entities;
+using Realtea.Core.Enums;
+using Realtea.Core.Interfaces;
+using Realtea.Core.Interfaces.Repositories;
+using Realtea.Core.Interfaces.Services;
 using Realtea.Core.Models;
-using Realtea.Core.Repositories;
-using Realtea.Domain.Entities;
-using Realtea.Domain.Repositories;
-using Realtea.Infrastructure;
 
 namespace Realtea.Core.Services
 {
-    public interface IAdvertisementService
-    {
-        Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto, int userId);
-
-        Task<ReadAdvertisementDto> GetByIdAsync(int id);
-
-        Task<IEnumerable<ReadAdvertisementDto>> GetAllAsync(AdvertisementDescription advertisementDescription);
-
-        Task InvalidateAsync(int id);
-
-        Task<UpdateAdvertisementDto> UpdateAsync(int id, int userId, UpdateAdvertisementDto updateAdvertisementDto);
-
-        Task<IEnumerable<Advertisement>> GetActiveAdsOrderedByPaidAds();
-    }
-
     public class AdvertisementService : IAdvertisementService
     {
         private readonly IAdvertisementRepository _advertisementRepository;
-        private readonly IPaymentRepository _paymentRepository;
+        private readonly PaymentService _paymentService;
+        private readonly IUserService _userService;
+        //private readonly IPaymentRepository _paymentRepository;
 
-        private readonly UserManager<User> _userManager;
+        //private readonly UserManager<User> _userManager;
 
-        public AdvertisementService(IAdvertisementRepository advertisementRepository, UserManager<User> userManager,
-            IPaymentRepository paymentRepository)
+        //public AdvertisementService(IAdvertisementRepository advertisementRepository, UserManager<User> userManager,
+        //    IPaymentRepository paymentRepository)
+        //{
+        //    _advertisementRepository = advertisementRepository;
+        //    _userManager = userManager;
+        //    _paymentReposiÍtory = paymentRepository;
+        //}
+
+        public AdvertisementService(IAdvertisementRepository advertisementRepository, IUserService userService, PaymentService paymentService)
         {
             _advertisementRepository = advertisementRepository;
-            _userManager = userManager;
-            _paymentRepository = paymentRepository;
+            _userService = userService;
+            _paymentService = paymentService;
         }
 
         public async Task<int> AddAsync(CreateAdvertisementDto createAdvertisementDto, int userId)
@@ -43,6 +39,7 @@ namespace Realtea.Core.Services
             _ = createAdvertisementDto ?? throw new ArgumentNullException(nameof(createAdvertisementDto));
             _ = createAdvertisementDto.CreateAdvertisementDetailsDto ?? throw new ArgumentNullException(nameof(createAdvertisementDto.CreateAdvertisementDetailsDto));
 
+ 
             var existingUser = await _userManager.FindByIdAsync(userId.ToString());
 
             if (existingUser == null)
@@ -63,10 +60,10 @@ namespace Realtea.Core.Services
             //var existingAdCount = _advertisementRepository.GetByCondition(x => x.Id == existingUser.Id).Count();
 
             // Can move to domain later.
-            if (another >= 5 && existingUser.UserType == Domain.Enums.UserType.Regular && createAdvertisementDto.AdvertisementType == Domain.Enums.AdvertisementType.Free)
+            if (another >= 5 && existingUser.UserType == UserType.Regular && createAdvertisementDto.AdvertisementType == AdvertisementType.Free)
                 throw new InvalidOperationException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.");
 
-            if (createAdvertisementDto.AdvertisementType == Domain.Enums.AdvertisementType.Paid)
+            if (createAdvertisementDto.AdvertisementType == AdvertisementType.Paid)
             {
                 if (!existingUser.UserBalance.IsCapableOfPayment)
                 {
@@ -74,14 +71,15 @@ namespace Realtea.Core.Services
                 }
 
                 existingUser.UserBalance.Balance -= 0.20m;
-                await _paymentRepository.CreateAsync(new Payment
-                {
-                    PaidAmount = 0.20m,
-                    //AdvertisementId = 100,// Should fire an Event in order to notify about payment and update user/ad?.
-                    PaymentDetail = Domain.Enums.PaymentDetail.Balance,
-                    PaymentMadeAt = DateTimeOffset.UtcNow,
-                    UserId = userId,
-                });
+                _userService.CreateAsync();
+                //await _paymentRepository.CreateAsync(new Payment
+                //{
+                //    PaidAmount = 0.20m,
+                //    //AdvertisementId = 100,// Should fire an Event in order to notify about payment and update user/ad?.
+                //    PaymentDetail = PaymentDetail.Balance,
+                //    PaymentMadeAt = DateTimeOffset.UtcNow,
+                //    UserId = userId,
+                //});
             }
 
             var newAdvertisement = new Advertisement
@@ -106,10 +104,10 @@ namespace Realtea.Core.Services
         public async Task<IEnumerable<ReadAdvertisementDto>> GetAllAsync(AdvertisementDescription advertisementDescription)
         {
 
-            var f = await _advertisementRepository.GetAllAsync();
+            var f = await _advertisementRepository.GetAsQ();
 
-            if (advertisementDescription.DealType != null)
-                f = f.Where(x => x.AdvertisementDetails.DealType == advertisementDescription.DealType);
+            if (advertisementDescription.DealType.HasValue)
+                f = f.Where(x => x.AdvertisementDetails.DealType == advertisementDescription.DealType.Value);
 
             if (advertisementDescription.PriceFrom.HasValue)
                 f = f.Where(x => x.AdvertisementDetails.Price >= advertisementDescription.PriceFrom);
@@ -124,7 +122,7 @@ namespace Realtea.Core.Services
                 f = f.Where(x => x.AdvertisementDetails.SquareMeter <= advertisementDescription.SqTo);
 
             if (advertisementDescription.Location.HasValue)
-                f = f.Where(x => x.AdvertisementDetails.Location == advertisementDescription.Location);
+                f = f.Where(x => x.AdvertisementDetails.Location == advertisementDescription.Location.Value);
 
             return f.Select(x => new ReadAdvertisementDto
             {

@@ -1,4 +1,5 @@
-﻿namespace Realtea.Domain.Entities
+﻿using System;
+namespace Realtea.Core.Entities
 {
     public abstract class BaseEntity
     {
@@ -14,3 +15,4 @@
         public DateTimeOffset? UpdatedAt { get; set; }
     }
 }
+

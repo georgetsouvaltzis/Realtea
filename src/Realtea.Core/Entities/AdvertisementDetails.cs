@@ -1,11 +1,12 @@
-﻿using Realtea.Domain.Enums;
+﻿using System;
+using Realtea.Core.Enums;
 
-namespace Realtea.Domain.Entities
+namespace Realtea.Core.Entities
 {
-    public class AdvertisementDetails : BaseEntity
-    {
+	public class AdvertisementDetails : BaseEntity
+	{
         public Advertisement Advertisement { get; set; }
-        
+
         public int AdvertisementId { get; set; }
 
         public DealType DealType { get; set; }
@@ -13,7 +14,8 @@ namespace Realtea.Domain.Entities
         public decimal Price { get; set; }
 
         public decimal SquareMeter { get; set; }
-        
+
         public Location Location { get; set; }
     }
 }
+

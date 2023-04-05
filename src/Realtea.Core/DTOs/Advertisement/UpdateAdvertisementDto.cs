@@ -1,5 +1,5 @@
 ﻿using System;
-using Realtea.Domain.Enums;
+using Realtea.Core.Enums;
 
 namespace Realtea.Core.DTOs.Advertisement
 {

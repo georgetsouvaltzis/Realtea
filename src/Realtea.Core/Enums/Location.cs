@@ -1,4 +1,4 @@
-﻿namespace Realtea.Domain.Enums
+﻿namespace Realtea.Core.Enums
 {
     public enum Location
     {

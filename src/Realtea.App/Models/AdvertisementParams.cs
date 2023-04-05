@@ -1,4 +1,4 @@
-﻿using Realtea.Domain.Enums;
+﻿using Realtea.Core.Enums;
 
 namespace Realtea.App.Models
 {

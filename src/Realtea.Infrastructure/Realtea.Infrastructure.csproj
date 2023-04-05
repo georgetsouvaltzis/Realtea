@@ -8,10 +8,26 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.15" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Realtea.Domain\Realtea.Domain.csproj" />
+    <None Remove="Repositories\" />
+    <None Remove="Microsoft.AspNetCore.Identity" />
+    <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="Identity\" />
+    <None Remove="Identity\Authentication\" />
+    <None Remove="Microsoft.EntityFrameworkCore.InMemory" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+    <Folder Include="Identity\" />
+    <Folder Include="Identity\Authentication\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Realtea.Core\Realtea.Core.csproj" />
+  </ItemGroup>
 </Project>
