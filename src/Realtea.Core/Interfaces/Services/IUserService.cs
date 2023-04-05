@@ -1,5 +1,4 @@
 ﻿using System;
-using Realtea.Core.DTOs.Advertisement;
 using Realtea.Core.Entities;
 
 namespace Realtea.Core.Interfaces.Services

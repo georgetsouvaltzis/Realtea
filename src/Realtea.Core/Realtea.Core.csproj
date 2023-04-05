@@ -12,6 +12,18 @@
     <None Remove="Interfaces\" />
     <None Remove="Interfaces\Repositories\" />
     <None Remove="Enums\" />
+    <None Remove="Queries\" />
+    <None Remove="MediatR" />
+    <None Remove="Responses\" />
+    <None Remove="Handlers\" />
+    <None Remove="Handlers\Queries\" />
+    <None Remove="Handlers\Queries\Advertisement\" />
+    <None Remove="Responses\Advertisement\" />
+    <None Remove="Handlers\Commands\" />
+    <None Remove="Handlers\Commands\Advertisement\" />
+    <None Remove="Commands\" />
+    <None Remove="Commands\Advertisement\" />
+    <None Remove="Requests\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -20,5 +32,19 @@
     <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Enums\" />
     <Folder Include="Interfaces\Services\" />
+    <Folder Include="Queries\" />
+    <Folder Include="Responses\" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Handlers\Queries\" />
+    <Folder Include="Handlers\Queries\Advertisement\" />
+    <Folder Include="Responses\Advertisement\" />
+    <Folder Include="Handlers\Commands\" />
+    <Folder Include="Handlers\Commands\Advertisement\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Commands\Advertisement\" />
+    <Folder Include="Requests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.0.1" />
   </ItemGroup>
 </Project>

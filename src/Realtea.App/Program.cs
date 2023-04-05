@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Realtea.App.Authorization;
+using Realtea.App.HttpContextWrapper;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
@@ -81,15 +82,19 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+builder.Services.AddScoped<IHttpContextAccessorWrapper, HttpContextAccessorWrapper>();
+
 builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteAuthHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementUpdateAuthHandler>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
-builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
+//builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
 var app = builder.Build();
 
