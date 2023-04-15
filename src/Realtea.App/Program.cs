@@ -4,17 +4,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Realtea.App.Authorization;
 using Realtea.App.HttpContextWrapper;
+using Realtea.App.Identity.Authorization.Handlers.Advertisement;
+using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Interfaces.Services;
-using Realtea.Core.Repositories;
-using Realtea.Core.Services;
 using Realtea.Infrastructure;
+using Realtea.Infrastructure.Authentication;
 using Realtea.Infrastructure.Identity;
-using Realtea.Infrastructure.Identity.Authentication;
 using Realtea.Infrastructure.Repositories;
 using Realtea.Infrastructure.Seeder;
 using System.IdentityModel.Tokens.Jwt;
@@ -75,7 +74,6 @@ builder.Services.AddAuthorization(options =>
 
     options.DefaultPolicy = builder.Build();
 
-
     options.AddPolicy("IsEligibleForAdvertisementDelete", policy =>
     {
         policy.AddRequirements(new IsEligibleForAdvertisementDeleteRequirement());
@@ -84,13 +82,13 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<IHttpContextAccessorWrapper, HttpContextAccessorWrapper>();
 
-builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteAuthHandler>();
-builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementUpdateAuthHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteHandler>();
+builder.Services.AddScoped<IAuthorizationHandler,IsEligibleForAdvertisementUpdateAuthHandler>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 //builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-builder.Services.AddScoped<IUserService, UserService>();
+//builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
 

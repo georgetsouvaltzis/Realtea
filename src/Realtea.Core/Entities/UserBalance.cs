@@ -1,6 +1,6 @@
 ﻿namespace Realtea.Core.Entities
 {
-    public class UserBalance
+    public class UserBalance : BaseEntity
     {
         public int UserId { get; set; }
         public User User { get; set; }

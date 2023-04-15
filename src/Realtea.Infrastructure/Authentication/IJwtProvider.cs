@@ -6,24 +6,25 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Realtea.Core.Entities;
+using Realtea.Infrastructure.Identity;
 
-namespace Realtea.Infrastructure.Identity.Authentication
+namespace Realtea.Infrastructure.Authentication
 {
     public interface IJwtProvider
     {
-        string Generate(User user);
+        string Generate(ApplicationUser user);
     }
 
     public class JwtProvider : IJwtProvider
     {
-        private readonly UserManager<User> _userManager;
-        public JwtProvider(UserManager<User> userManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public JwtProvider(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
     
         /// TODO: When user updates their account type, they should get updated data.   
-        public string Generate(User user)
+        public string Generate(ApplicationUser user)
         {
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")), SecurityAlgorithms.HmacSha256);
 

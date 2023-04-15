@@ -85,8 +85,6 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             {
                 Id = newAdvertisement.Id
             };
-
-            //return newAdvertisement.Id;
         }
     }
 }

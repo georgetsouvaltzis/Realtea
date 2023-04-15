@@ -1,18 +1,17 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Realtea.App.Authorization;
 using Realtea.App.Models;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Models;
 using Realtea.Core.Enums;
-using Realtea.Core.Services;
 using Realtea.App.Enums;
 using MediatR;
 using Realtea.Core.Queries;
 using Realtea.App.HttpContextWrapper;
 using Realtea.Core.Commands.Advertisement;
 using Realtea.Core.Requests;
+using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 
 namespace Realtea.App.Controllers.V1
 {
@@ -38,16 +37,6 @@ namespace Realtea.App.Controllers.V1
         {
             var result = await _mediator.Send(request);
 
-            //var advertisementDescription = new AdvertisementDescription
-            //{
-            //    Location = MapLocation(request.Location),
-            //    DealType = MapDealType(request.DealType),
-            //    PriceFrom = request.PriceFrom,
-            //    PriceTo = request.PriceTo,
-            //    SqFrom = request.SqFrom,
-            //    SqTo = request.SqTo
-            //};
-
             return Ok(result);
 
             //var result = await _advertisementService.GetAllAsync(advertisementDescription);
@@ -60,10 +49,7 @@ namespace Realtea.App.Controllers.V1
         [Route("{id:int}")]
         public async Task<ActionResult> GetById([FromRoute] ReadAdvertisementQuery request)
         {
-
             var result = await _mediator.Send(request);
-
-            //return Ok(await _advertisementService.GetByIdAsync(id));
             return Ok(result);
         }
 
@@ -105,9 +91,6 @@ namespace Realtea.App.Controllers.V1
         {
             var existingAd = await _mediator.Send(new ReadAdvertisementQuery { Id = request.Id });
 
-            //var existingAd = await _advertisementService.GetByIdAsync(id);
-
-            // Need to move it to Deletecommandhandler.
             var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementDeleteRequirement());
 
             if (!result.Succeeded)
@@ -116,8 +99,6 @@ namespace Realtea.App.Controllers.V1
             }
 
             await _mediator.Send(request);
-            //var userId = Convert.ToInt32(User.FindFirstValue("sub"));
-            //await _advertisementService.InvalidateAsync(id);
 
             return NoContent();
         }
@@ -127,8 +108,6 @@ namespace Realtea.App.Controllers.V1
         [Route("{id:int}")]
         public async Task<ActionResult> Update(int id, [FromBody] UpdateAdvertisementCommand request)
         {
-            //var existingAd = await _advertisementService.GetByIdAsync(id);
-
             var existingAd = await _mediator.Send(new ReadAdvertisementQuery { Id = id });
 
             var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementUpdateRequirement());
@@ -138,12 +117,10 @@ namespace Realtea.App.Controllers.V1
                 return Forbid();
             }
 
-            //var userId = Convert.ToInt32(User.FindFirstValue("sub"));
             var userId = _httpContextAccessorWrapper.GetUserId();
 
             var updatedAd = await _mediator.Send(request);
-            //var updatedAd = await _advertisementService.UpdateAsync(id, userId, dto);
-
+           
             return Ok(updatedAd);
         }
     }

@@ -29,6 +29,11 @@ namespace Realtea.Infrastructure
                 .WithOne(x => x.Advertisement)
                 .HasForeignKey<AdvertisementDetails>(x => x.AdvertisementId);
 
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.UserBalance)
+                .WithOne(x => x.User)
+                .HasForeignKey<UserBalance>(x => x.UserId);
+
             base.OnModelCreating(modelBuilder);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
