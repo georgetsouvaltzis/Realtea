@@ -10,13 +10,14 @@ using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
-using Realtea.Core.Interfaces.Services;
 using Realtea.Infrastructure;
 using Realtea.Infrastructure.Authentication;
+using Realtea.Infrastructure.Handlers.Commands.Authorization;
 using Realtea.Infrastructure.Identity;
 using Realtea.Infrastructure.Repositories;
 using Realtea.Infrastructure.Seeder;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,11 +89,12 @@ builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 //builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 //builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();
 

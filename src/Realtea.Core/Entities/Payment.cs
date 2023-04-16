@@ -5,7 +5,7 @@ namespace Realtea.Core.Entities
 {
     public class Payment : BaseEntity
     {
-        public User User { get; set; }
+        //public User User { get; set; }
         public int UserId { get; set; }
 
         public PaymentDetail PaymentDetail { get; set; }

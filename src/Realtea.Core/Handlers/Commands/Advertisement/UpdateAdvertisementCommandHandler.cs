@@ -18,7 +18,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
 
         public async Task<UpdateAdvertisementResponse> Handle(UpdateAdvertisementCommand request, CancellationToken cancellationToken)
         {
-            var existingAd = await _advertisementRepository.GetByIdAsync(1);
+            var existingAd = await _advertisementRepository.GetByIdAsync(request.Id);
 
             if (existingAd == null)
                 throw new InvalidOperationException(nameof(existingAd));

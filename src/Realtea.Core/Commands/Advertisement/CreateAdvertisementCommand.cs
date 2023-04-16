@@ -17,7 +17,7 @@ namespace Realtea.Core.Commands.Advertisement
         // DO NOT FORGET TO CHANGE IT.
         public AdvertisementType? AdvertisementType { get; set; }
 
-        public CreateAdvertisementDetailsRequest? UpdateAdvertisementDetails { get; set; }
+        public CreateAdvertisementDetailsRequest? CreateAdvertisementDetails { get; set; }
 
         public bool? IsActive { get; set; }
     }

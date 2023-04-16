@@ -23,10 +23,10 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
         public async Task<CreateAdvertisementResponse> Handle(CreateAdvertisementCommand request, CancellationToken cancellationToken)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            _ = request.UpdateAdvertisementDetails ?? throw new ArgumentNullException(nameof(request.UpdateAdvertisementDetails));
+            _ = request.CreateAdvertisementDetails ?? throw new ArgumentNullException(nameof(request.CreateAdvertisementDetails));
 
 
-            var existingUser = await _userRepository.GetByIdAsync(request.UserId);
+            var existingUser = await _userRepository.GetByIdAsync(request.UserId.ToString());
             //var existingUser = await _userManager.FindByIdAsync(userId.ToString());
 
             if (existingUser == null)
@@ -44,7 +44,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
 
             var another = _advertisementRepository.GetAllAsync().GetAwaiter().GetResult().Where(x => x.UserId == existingUser.Id).Count();
             // Need to change this logic so it returns IEnumerable
-            var existingAdCount = _advertisementRepository.GetByCondition(x => x.Id == existingUser.Id).Count();
+            var existingAdCount = _advertisementRepository.GetAsQueryable().Where(x => x.Id == existingUser.Id).Count();
 
             // Can move to domain later.
             if (another >= 5 && existingUser.UserType == UserType.Regular && request.AdvertisementType.Value == AdvertisementType.Free)
@@ -69,13 +69,13 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 Name = request.Name,
                 UserId = existingUser.Id,
                 Description = request.Description,
-                AdvertisementDetails = new AdvertisementDetails
+               AdvertisementDetails = new AdvertisementDetails
                 {
                     // TODO: DO NOT FORGET ABOUT THIS
                     //DealType = request.UpdateAdvertisementDetails.DealType,
                     //Location = request.UpdateAdvertisementDetails.Location.Value,
-                    Price = request.UpdateAdvertisementDetails.Price.Value,
-                    SquareMeter = request.UpdateAdvertisementDetails.SquareMeter.Value,
+                    Price = request.CreateAdvertisementDetails.Price.Value,
+                    SquareMeter = request.CreateAdvertisementDetails.SquareMeter.Value,
                 }
             };
 

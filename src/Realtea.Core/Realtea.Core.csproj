@@ -31,7 +31,6 @@
     <Folder Include="Interfaces\" />
     <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Enums\" />
-    <Folder Include="Interfaces\Services\" />
     <Folder Include="Queries\" />
     <Folder Include="Responses\" />
     <Folder Include="Handlers\" />

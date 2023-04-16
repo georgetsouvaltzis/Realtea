@@ -28,11 +28,11 @@ namespace Realtea.Infrastructure.Authentication
         {
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")), SecurityAlgorithms.HmacSha256);
 
-            var role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Single();
+            //var role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Single();
             var claims = new Claim[]
             {            
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(type: "role", role)
+                //new Claim(type: "role", role)
             };
 
             var token = new JwtSecurityToken(

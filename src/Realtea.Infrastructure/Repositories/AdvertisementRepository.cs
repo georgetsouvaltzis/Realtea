@@ -50,6 +50,15 @@ namespace Realtea.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public IQueryable<Advertisement?> GetAsQueryable()
+        {
+            return _db
+                .Advertisements
+                .Include(x => x.AdvertisementDetails)
+                .Include(x => x.User)
+                .AsQueryable();
+            
+        }
         public async Task<Advertisement?> GetByIdAsync(int id)
         {
             return await _db
@@ -60,14 +69,6 @@ namespace Realtea.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
 
 
-        }
-        public IQueryable<Advertisement?> GetByCondition(Expression<Func<Advertisement, bool>> expr = default)
-        {
-            return _db
-                .Advertisements
-                .Include(x => x.AdvertisementDetails)
-                .Include(x => x.User)
-                .Where(expr);
         }
 
         public async Task<Advertisement> UpdateAsync(Advertisement advertisement)

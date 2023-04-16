@@ -7,6 +7,7 @@ namespace Realtea.Core.Commands.Advertisement
 {
     public class UpdateAdvertisementCommand : IRequest<UpdateAdvertisementResponse>
     {
+        public int Id { get; set; }
         public string? Name { get; set; }
 
         public string? Description { get; set; }

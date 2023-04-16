@@ -8,7 +8,7 @@ namespace Realtea.Core.Entities
             CreatedAt = DateTimeOffset.Now;
         }
 
-        public int Id { get; init; }
+        public int Id { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
 

@@ -2,18 +2,21 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Realtea.Core.Entities;
+using Realtea.Core.Interfaces.Repositories;
 using Realtea.Infrastructure.Commands.Authorization;
+using Realtea.Infrastructure.Identity;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Realtea.Infrastructure.Handlers.Commands.Authorization
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
     {
-        private readonly UserManager<User> _userManager;
+        //private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public RegisterUserCommandHandler(UserManager<User> userManager)
+        public RegisterUserCommandHandler(IUserRepository userRepository)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -24,7 +27,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             if (request.Password != request.ConfirmedPassword)
                 throw new InvalidOperationException("Passwords do not match.");
 
-            var existingUser = await _userManager.FindByNameAsync(request.UserName);
+            var existingUser = await _userRepository.GetByUsernameAsync(request.UserName);
 
             if (existingUser != null)
                 throw new InvalidOperationException($"{request.UserName} is taken.");
@@ -34,10 +37,11 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
                 UserName = request.UserName,
             };
 
-            var result = await _userManager.CreateAsync(newUser, request.Password);
+            var result = await _userRepository.CreateAsync(newUser, request.Password);
 
-            if (!result.Succeeded)
-                throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
+            if (result == 0)
+                //throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
+                throw new InvalidOperationException("Failed to create user");
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
 
         public async Task<IEnumerable<ReadAdvertisementsResponse>> Handle(ReadFilteredAdvertisementsQuery request, CancellationToken cancellationToken)
         {
-            var f = await _advertisementRepository.GetAllAsync();
+            var f = _advertisementRepository.GetAsQueryable();
 
             //if (request.DealType.HasValue)
             //    f = f.Where(x => x.AdvertisementDetails.DealType == request.DealType.Value);
@@ -40,9 +40,9 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
             //if (request.Location.HasValue)
             //    f = f.Where(x => x.AdvertisementDetails.Location == request.Location.Value);
 
-            var z = f.Select(x => x);
+            var asdf = f.ToList();
 
-            return f.Select(x => new ReadAdvertisementsResponse
+            return asdf.Select(x => new ReadAdvertisementsResponse
             {
                 Id = x.Id,
                 Name = x.Name,

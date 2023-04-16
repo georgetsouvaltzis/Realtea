@@ -6,13 +6,13 @@ namespace Realtea.Core.Entities
     //public class User : IdentityUser<int>
     public class User : BaseEntity
     {
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         public ICollection<Advertisement> Advertisements { get; set; }
 

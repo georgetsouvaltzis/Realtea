@@ -18,7 +18,6 @@ namespace Realtea.App.Controllers.V1
     public class AdvertisementsController : V1ControllerBase
     {
         private readonly IMediator _mediator;
-        //private readonly IAdvertisementService _advertisementService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IHttpContextAccessorWrapper _httpContextAccessorWrapper;
 
@@ -28,6 +27,7 @@ namespace Realtea.App.Controllers.V1
             IHttpContextAccessorWrapper httpContextAccessorWrapper)
         {
             _mediator = mediator;
+            _authorizationService = authorizationService;
             _httpContextAccessorWrapper = httpContextAccessorWrapper;
         }
 
@@ -38,11 +38,6 @@ namespace Realtea.App.Controllers.V1
             var result = await _mediator.Send(request);
 
             return Ok(result);
-
-            //var result = await _advertisementService.GetAllAsync(advertisementDescription);
-
-
-            //return Ok(await _advertisementService.GetAllAsync(advertisementDescription));
         }
 
         [HttpGet]
@@ -61,10 +56,6 @@ namespace Realtea.App.Controllers.V1
         public async Task<ActionResult> Add([FromBody] CreateAdvertisementRequest request)
         {
             var userId = _httpContextAccessorWrapper.GetUserId();
-            // Determine Whether is user authorized or not to Add Any extra ads.
-            //var userId = Convert.ToInt32(User.FindFirstValue("sub"));
-
-            //return RedirectToAction("MakePayment", "Payments", new { advertisementId = 1 });
 
             var command = new CreateAdvertisementCommand
             {
@@ -74,12 +65,10 @@ namespace Realtea.App.Controllers.V1
                 IsActive = request.IsActive,
                 UserId = userId,
                 // TODO: Need to change this.S
-                UpdateAdvertisementDetails = request.UpdateAdvertisementDetails,
+                CreateAdvertisementDetails = request.UpdateAdvertisementDetails,
             };
 
             var resultt = await _mediator.Send(command);
-
-            //var result = await _advertisementService.AddAsync(createAdvertisementDto, userId);
 
             return CreatedAtAction(nameof(GetById), new { id = resultt.Id }, new ReadAdvertisementQuery { Id = resultt.Id });
         }
@@ -119,8 +108,12 @@ namespace Realtea.App.Controllers.V1
 
             var userId = _httpContextAccessorWrapper.GetUserId();
 
+            // Need To change to request/response model + Command model
+
+            request.Id = id;
+
             var updatedAd = await _mediator.Send(request);
-           
+
             return Ok(updatedAd);
         }
     }
