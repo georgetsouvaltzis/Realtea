@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Identity.Authorization.Handlers.Advertisement;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
+using Realtea.App.Profiles;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
@@ -29,7 +31,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddAutoMapper(typeof(Program));
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>

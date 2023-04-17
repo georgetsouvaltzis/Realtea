@@ -4,11 +4,11 @@ using Realtea.Core.Commands.Advertisement;
 using Realtea.Core.Entities;
 using Realtea.Core.Enums;
 using Realtea.Core.Interfaces.Repositories;
-using Realtea.Core.Responses.Advertisement;
+using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Handlers.Commands.Advertisement
 {
-    public class CreateAdvertisementCommandHandler : IRequestHandler<CreateAdvertisementCommand, CreateAdvertisementResponse>
+    public class CreateAdvertisementCommandHandler : IRequestHandler<CreateAdvertisementCommand, CreateAdvertisementResult>
     {
         private readonly IAdvertisementRepository _advertisementRepository;
         private readonly IPaymentRepository _paymentRepository;
@@ -23,10 +23,9 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             _paymentRepository = paymentRepository;
         }
 
-        public async Task<CreateAdvertisementResponse> Handle(CreateAdvertisementCommand request, CancellationToken cancellationToken)
+        public async Task<CreateAdvertisementResult> Handle(CreateAdvertisementCommand request, CancellationToken cancellationToken)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
-            _ = request.CreateAdvertisementDetails ?? throw new ArgumentNullException(nameof(request.CreateAdvertisementDetails));
 
             var existingUser = await _userRepository.GetByIdAsync(request.UserId.ToString());
 
@@ -48,7 +47,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             var existingAdCount = _advertisementRepository.GetAsQueryable().Where(x => x.Id == existingUser.Id).Count();
 
             // Can move to domain later.
-            if (another >= 5 && existingUser.UserType == UserType.Regular && request.AdvertisementType.Value == AdvertisementType.Free)
+            if (another >= 5 && existingUser.UserType == UserType.Regular && request.AdvertisementType == AdvertisementType.Free)
                 throw new InvalidOperationException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.");
 
             if (request.AdvertisementType == AdvertisementType.Paid && !existingUser.UserBalance.IsCapableOfPayment)
@@ -63,14 +62,17 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 Name = request.Name,
                 UserId = existingUser.Id,
                 Description = request.Description,
-                AdvertisementDetails = new AdvertisementDetails
-                {
-                    // TODO: DO NOT FORGET ABOUT THIS
-                    //DealType = request.UpdateAdvertisementDetails.DealType,
-                    //Location = request.UpdateAdvertisementDetails.Location.Value,
-                    Price = request.CreateAdvertisementDetails.Price.Value,
-                    SquareMeter = request.CreateAdvertisementDetails.SquareMeter.Value,
-                }
+                DealType = request.DealType,
+                Location = request.Location,
+                SquareMeter = request.SquareMeter,
+                //AdvertisementDetails = new AdvertisementDetails
+                //{
+                //    // TODO: DO NOT FORGET ABOUT THIS
+                //    //DealType = request.UpdateAdvertisementDetails.DealType,
+                //    //Location = request.UpdateAdvertisementDetails.Location.Value,
+                //    Price = request.CreateAdvertisementDetails.Price.Value,
+                //    SquareMeter = request.CreateAdvertisementDetails.SquareMeter.Value,
+                //}
             };
 
             await _advertisementRepository.AddAsync(newAdvertisement);
@@ -85,7 +87,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 UserId = existingUser.Id,
             });
 
-            return new CreateAdvertisementResponse
+            return new CreateAdvertisementResult
             {
                 Id = newAdvertisement.Id
             };

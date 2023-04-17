@@ -5,11 +5,11 @@ using Realtea.Core.Entities;
 using Realtea.Infrastructure.Authentication;
 using Realtea.Infrastructure.Commands.Authorization;
 using Realtea.Infrastructure.Identity;
-using Realtea.Infrastructure.Responses.Authentication;
+using Realtea.Infrastructure.Results.Auth;
 
 namespace Realtea.Infrastructure.Handlers.Commands.Authorization
 {
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUserResponse>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUserResult>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -22,7 +22,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             _jwtProvider = jwtProvider;
         }
 
-        public async Task<LoginUserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<LoginUserResult> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -39,7 +39,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
 
             var generatedToken = _jwtProvider.Generate(existingUser);
 
-            return new LoginUserResponse
+            return new LoginUserResult
             {
                 Token = generatedToken
             };

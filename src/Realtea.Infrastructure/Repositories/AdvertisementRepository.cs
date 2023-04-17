@@ -44,7 +44,6 @@ namespace Realtea.Infrastructure.Repositories
         {
             return await _db
                 .Advertisements
-                .Include(x => x.AdvertisementDetails)
                 .Include(x => x.User)
                 .AsNoTracking()
                 .ToListAsync();
@@ -54,7 +53,6 @@ namespace Realtea.Infrastructure.Repositories
         {
             return _db
                 .Advertisements
-                .Include(x => x.AdvertisementDetails)
                 .Include(x => x.User)
                 .AsQueryable();
             
@@ -63,7 +61,6 @@ namespace Realtea.Infrastructure.Repositories
         {
             return await _db
                 .Advertisements
-                .Include(x => x.AdvertisementDetails)
                 .Include(x => x.User)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);

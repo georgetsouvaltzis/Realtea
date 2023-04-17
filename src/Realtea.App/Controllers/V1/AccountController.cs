@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Realtea.App.HttpContextWrapper;
+using Realtea.App.Requests.Account;
 using Realtea.Core.Commands.Account;
 
 namespace Realtea.App.Controllers.V1
@@ -21,17 +22,22 @@ namespace Realtea.App.Controllers.V1
         [Route("upgrade")]
         public async Task<ActionResult> UpgradeAccount()
         {
-            //await _userService.UpgradeAccountAsync(User.FindFirstValue("sub"));
-
             return NoContent();
         }
 
         // TODO: ability to upgrade account details.
         [HttpPatch]
-        public async Task<ActionResult> Edit([FromBody] EditAccountCommand command)
+        public async Task<ActionResult> Edit([FromBody] EditAccountRequest request)
         {
             // Need to change Request/Response model.
-            command.UserId = CurrentUserId;
+
+            var command = new EditAccountCommand
+            {
+                UserId = CurrentUserId,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+            };
 
             await Mediator.Send(command);
 

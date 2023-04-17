@@ -11,10 +11,6 @@ namespace Realtea.Core.Entities
 
         public AdvertisementType AdvertisementType { get; set; } = AdvertisementType.Free;
 
-        public AdvertisementDetails AdvertisementDetails { get; set; }
-
-        public int AdvertisementDetailsId { get; set; }
-
         public bool IsActive { get; set; }
 
         public User User { get; set; }
@@ -23,6 +19,14 @@ namespace Realtea.Core.Entities
 
         // if IsActive = false, Should be null.
         public DateTimeOffset? IsActiveUntil { get; set; }
+
+        public DealType DealType { get; set; }
+
+        public decimal Price { get; set; }
+
+        public decimal SquareMeter { get; set; }
+
+        public Location Location { get; set; }
     }
 }
 

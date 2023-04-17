@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Realtea.Infrastructure.Responses.Authentication
+namespace Realtea.App.Responses.Auth
 {
 	public class LoginUserResponse
 	{

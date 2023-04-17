@@ -18,17 +18,10 @@ namespace Realtea.Infrastructure
 
         public DbSet<Advertisement> Advertisements { get; set; }
 
-        public DbSet<AdvertisementDetails> AdvertisementsDetails { get; set; }
-
         public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Advertisement>()
-                .HasOne(x => x.AdvertisementDetails)
-                .WithOne(x => x.Advertisement)
-                .HasForeignKey<AdvertisementDetails>(x => x.AdvertisementId);
-
             modelBuilder.Entity<User>()
                 .HasOne(x => x.UserBalance)
                 .WithOne(x => x.User)

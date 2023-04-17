@@ -1,11 +1,10 @@
 ﻿using System;
 using MediatR;
-using Realtea.Core.Responses;
-using Realtea.Core.Responses.Advertisement;
+using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Queries
 {
-    public class ReadAdvertisementQuery : IRequest<ReadAdvertisementsResponse>
+    public class ReadAdvertisementQuery : IRequest<AdvertisementResult>
     {
         public int Id { get; set; }
     }

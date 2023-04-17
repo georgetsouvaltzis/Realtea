@@ -2,13 +2,13 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
-using Realtea.Core.Responses.Advertisement;
+using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.App.Identity.Authorization.Handlers.Advertisement
 {
-    public class IsEligibleForAdvertisementDeleteHandler : AuthorizationHandler<IsEligibleForAdvertisementDeleteRequirement, ReadAdvertisementsResponse>
+    public class IsEligibleForAdvertisementDeleteHandler : AuthorizationHandler<IsEligibleForAdvertisementDeleteRequirement, AdvertisementResult>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsEligibleForAdvertisementDeleteRequirement requirement, ReadAdvertisementsResponse resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsEligibleForAdvertisementDeleteRequirement requirement, AdvertisementResult resource)
         {
             var userId = Convert.ToInt32(context.User.FindFirstValue("sub"));
 

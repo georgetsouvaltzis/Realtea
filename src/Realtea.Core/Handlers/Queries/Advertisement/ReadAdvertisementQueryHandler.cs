@@ -3,11 +3,11 @@ using MediatR;
 using Realtea.Core.Enums;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Queries;
-using Realtea.Core.Responses.Advertisement;
+using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Handlers.Queries.Advertisement
 {
-    public class ReadAdvertisementQueryHandler : IRequestHandler<ReadAdvertisementQuery, ReadAdvertisementsResponse>
+    public class ReadAdvertisementQueryHandler : IRequestHandler<ReadAdvertisementQuery, AdvertisementResult>
     {
         private readonly IAdvertisementRepository _advertisementRepository;
 
@@ -16,14 +16,14 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
             _advertisementRepository = advertisementRepository;
         }
 
-        public async Task<ReadAdvertisementsResponse> Handle(ReadAdvertisementQuery request, CancellationToken cancellationToken)
+        public async Task<AdvertisementResult> Handle(ReadAdvertisementQuery request, CancellationToken cancellationToken)
         {
             var existingAd = await _advertisementRepository.GetByIdAsync(request.Id);
 
             if (existingAd == null)
                 throw new InvalidOperationException(nameof(existingAd));
 
-            return new ReadAdvertisementsResponse
+            return new AdvertisementResult
             {
                 Id = existingAd.Id,
                 UserId = existingAd.UserId,
@@ -31,36 +31,32 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
                 Description = existingAd.Description,
                 AdvertisementType = existingAd.AdvertisementType,
                 IsActive = existingAd.IsActive,
-                ReadAdvertisementDetail = new ReadAdvertisementDetailResponse
-                {
-                    Id = existingAd.AdvertisementDetails.Id,
-                    DealType = MapDealType(existingAd.AdvertisementDetails.DealType),
-                    Location = MapLocation(existingAd.AdvertisementDetails.Location),
-                    Price = existingAd.AdvertisementDetails.Price,
-                    SquareMeter = existingAd.AdvertisementDetails.SquareMeter,
-                }
+                DealType = existingAd.DealType,
+                Location = existingAd.Location,
+                Price = existingAd.Price,
+                SquareMeter = existingAd.SquareMeter,
             };
         }
 
-        private DealTypeEnum MapDealType(DealType dealType)
-        {
-            return dealType switch
-            {
-                DealType.Mortgage => DealTypeEnum.Mortgage,
-                DealType.Sale => DealTypeEnum.Sale,
-                DealType.Rental => DealTypeEnum.Rental,
-            };
-        }
+        //private DealTypeEnum MapDealType(DealType dealType)
+        //{
+        //    return dealType switch
+        //    {
+        //        DealType.Mortgage => DealTypeEnum.Mortgage,
+        //        DealType.Sale => DealTypeEnum.Sale,
+        //        DealType.Rental => DealTypeEnum.Rental,
+        //    };
+        //}
 
-        private LocationEnum MapLocation(Location location)
-        {
-            return location switch
-            {
-                Location.Tbilisi => LocationEnum.Tbilisi,
-                Location.Batumi => LocationEnum.Batumi,
-                Location.Kutaisi => LocationEnum.Kutaisi,
-            };
-        }
+        //private LocationEnum MapLocation(Location location)
+        //{
+        //    return location switch
+        //    {
+        //        Location.Tbilisi => LocationEnum.Tbilisi,
+        //        Location.Batumi => LocationEnum.Batumi,
+        //        Location.Kutaisi => LocationEnum.Kutaisi,
+        //    };
+        //}
     }
 }
 

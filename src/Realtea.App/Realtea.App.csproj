@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +19,14 @@
     <None Remove="Filters\" />
     <None Remove="Requests\" />
     <None Remove="Responses\" />
+    <None Remove="Requests\Account\" />
+    <None Remove="Requests\Advertisement\" />
+    <None Remove="Responses\Advertisement\" />
+    <None Remove="Requests\Auth\" />
+    <None Remove="Responses\Auth\" />
+    <None Remove="AutoMapper" />
+    <None Remove="Profiles\" />
+    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Enums\" />
@@ -25,6 +35,12 @@
     <Folder Include="Filters\" />
     <Folder Include="Requests\" />
     <Folder Include="Responses\" />
+    <Folder Include="Requests\Account\" />
+    <Folder Include="Requests\Advertisement\" />
+    <Folder Include="Responses\Advertisement\" />
+    <Folder Include="Requests\Auth\" />
+    <Folder Include="Responses\Auth\" />
+    <Folder Include="Profiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Realtea.Core\Realtea.Core.csproj">

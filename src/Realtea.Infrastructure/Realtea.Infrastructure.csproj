@@ -24,9 +24,9 @@
     <None Remove="Handlers\" />
     <None Remove="Handlers\Commands\" />
     <None Remove="Handlers\Commands\Authorization\" />
-    <None Remove="Responses\" />
-    <None Remove="Responses\Authentication\" />
     <None Remove="Authentication\" />
+    <None Remove="Results\" />
+    <None Remove="Results\Auth\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
@@ -35,9 +35,9 @@
     <Folder Include="Handlers\" />
     <Folder Include="Handlers\Commands\" />
     <Folder Include="Handlers\Commands\Authorization\" />
-    <Folder Include="Responses\" />
-    <Folder Include="Responses\Authentication\" />
     <Folder Include="Authentication\" />
+    <Folder Include="Results\" />
+    <Folder Include="Results\Auth\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Realtea.Core\Realtea.Core.csproj" />

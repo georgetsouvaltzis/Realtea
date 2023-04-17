@@ -1,12 +1,13 @@
 ﻿using MediatR;
-using Realtea.Core.Responses.Advertisement;
+using Realtea.Core.Enums;
+using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Queries
 {
-    public class ReadFilteredAdvertisementsQuery : IRequest<IEnumerable<ReadAdvertisementsResponse>>
+    public class ReadFilteredAdvertisementsQuery : IRequest<IEnumerable<AdvertisementResult>>
     {
-        public DealTypeEnum? DealType { get; set; }
-        public LocationEnum? Location { get; set; }
+        public DealType? DealType { get; set; }
+        public Location? Location { get; set; }
         public decimal? PriceFrom { get; set; }
         public decimal? PriceTo { get; set; }
         public decimal? SqFrom { get; set; }
