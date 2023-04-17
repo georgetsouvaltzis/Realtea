@@ -5,8 +5,10 @@ namespace Realtea.Core.Interfaces.Repositories
 {
 	public interface IPaymentRepository
 	{
-		Task CreateAsync(Payment payment);
+		Task<int> CreateAsync(Payment payment);
 
-		IQueryable<Payment> GetPaymentsQueryable();
+		IQueryable<Payment> GetAsQueryable();
+
+		Task GetByIdAsync(int id);
 	}
 }

@@ -17,25 +17,20 @@ namespace Realtea.App.Controllers.V1
 {
     public class AdvertisementsController : V1ControllerBase
     {
-        private readonly IMediator _mediator;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IHttpContextAccessorWrapper _httpContextAccessorWrapper;
 
-        public AdvertisementsController(
+        public AdvertisementsController(IMediator mediator,
             IAuthorizationService authorizationService,
-            IMediator mediator,
-            IHttpContextAccessorWrapper httpContextAccessorWrapper)
+            IHttpContextAccessorWrapper wrapper) : base(mediator, wrapper)
         {
-            _mediator = mediator;
-            _authorizationService = authorizationService;
-            _httpContextAccessorWrapper = httpContextAccessorWrapper;
+            _authorizationService = authorizationService; 
         }
 
         // should update Based on IsActive, Desc/asc, etc.
         [HttpGet]
         public async Task<ActionResult> GetAll([FromQuery] ReadFilteredAdvertisementsQuery request)
         {
-            var result = await _mediator.Send(request);
+            var result = await Mediator.Send(request);
 
             return Ok(result);
         }
@@ -44,31 +39,25 @@ namespace Realtea.App.Controllers.V1
         [Route("{id:int}")]
         public async Task<ActionResult> GetById([FromRoute] ReadAdvertisementQuery request)
         {
-            var result = await _mediator.Send(request);
+            var result = await Mediator.Send(request);
             return Ok(result);
         }
 
         [HttpPost]
         [Authorize]
-        // currently it uses no authorized value of ID. Need to refactor it.
-        // Probably add event that in case user adds Paid ad,
-        // Make it appear on top?
         public async Task<ActionResult> Add([FromBody] CreateAdvertisementRequest request)
         {
-            var userId = _httpContextAccessorWrapper.GetUserId();
-
             var command = new CreateAdvertisementCommand
             {
                 Name = request.Name,
                 AdvertisementType = request.AdvertisementType,
                 Description = request.Description,
                 IsActive = request.IsActive,
-                UserId = userId,
-                // TODO: Need to change this.S
+                UserId = CurrentUserId,
                 CreateAdvertisementDetails = request.UpdateAdvertisementDetails,
             };
 
-            var resultt = await _mediator.Send(command);
+            var resultt = await Mediator.Send(command);
 
             return CreatedAtAction(nameof(GetById), new { id = resultt.Id }, new ReadAdvertisementQuery { Id = resultt.Id });
         }
@@ -78,7 +67,7 @@ namespace Realtea.App.Controllers.V1
         [Route("{id:int}")]
         public async Task<ActionResult> Delete([FromRoute] DeleteAdvertisementCommand request)
         {
-            var existingAd = await _mediator.Send(new ReadAdvertisementQuery { Id = request.Id });
+            var existingAd = await Mediator.Send(new ReadAdvertisementQuery { Id = request.Id });
 
             var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementDeleteRequirement());
 
@@ -87,7 +76,7 @@ namespace Realtea.App.Controllers.V1
                 return Forbid();
             }
 
-            await _mediator.Send(request);
+            await Mediator.Send(request);
 
             return NoContent();
         }
@@ -97,7 +86,7 @@ namespace Realtea.App.Controllers.V1
         [Route("{id:int}")]
         public async Task<ActionResult> Update(int id, [FromBody] UpdateAdvertisementCommand request)
         {
-            var existingAd = await _mediator.Send(new ReadAdvertisementQuery { Id = id });
+            var existingAd = await Mediator.Send(new ReadAdvertisementQuery { Id = id });
 
             var result = await _authorizationService.AuthorizeAsync(User, existingAd, new IsEligibleForAdvertisementUpdateRequirement());
 
@@ -106,13 +95,11 @@ namespace Realtea.App.Controllers.V1
                 return Forbid();
             }
 
-            var userId = _httpContextAccessorWrapper.GetUserId();
-
             // Need To change to request/response model + Command model
 
             request.Id = id;
 
-            var updatedAd = await _mediator.Send(request);
+            var updatedAd = await Mediator.Send(request);
 
             return Ok(updatedAd);
         }

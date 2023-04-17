@@ -11,13 +11,16 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
     public class CreateAdvertisementCommandHandler : IRequestHandler<CreateAdvertisementCommand, CreateAdvertisementResponse>
     {
         private readonly IAdvertisementRepository _advertisementRepository;
+        private readonly IPaymentRepository _paymentRepository;
         private readonly IUserRepository _userRepository;
 
         public CreateAdvertisementCommandHandler(IAdvertisementRepository advertisementRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IPaymentRepository paymentRepository)
         {
             _advertisementRepository = advertisementRepository;
             _userRepository = userRepository;
+            _paymentRepository = paymentRepository;
         }
 
         public async Task<CreateAdvertisementResponse> Handle(CreateAdvertisementCommand request, CancellationToken cancellationToken)
@@ -25,9 +28,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             _ = request ?? throw new ArgumentNullException(nameof(request));
             _ = request.CreateAdvertisementDetails ?? throw new ArgumentNullException(nameof(request.CreateAdvertisementDetails));
 
-
             var existingUser = await _userRepository.GetByIdAsync(request.UserId.ToString());
-            //var existingUser = await _userManager.FindByIdAsync(userId.ToString());
 
             if (existingUser == null)
                 throw new InvalidOperationException(nameof(existingUser));
@@ -54,22 +55,15 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             {
                 throw new InvalidOperationException("Insufficient balance.");
             }
+
             existingUser.UserBalance.Balance -= 0.20m;
-            //await _paymentRepository.CreateAsync(new Payment
-            //{
-            //    PaidAmount = 0.20m,
-            //    //AdvertisementId = 100,// Should fire an Event in order to notify about payment and update user/ad?.
-            //    PaymentDetail = PaymentDetail.Balance,
-            //    PaymentMadeAt = DateTimeOffset.UtcNow,
-            //    UserId = userId,
-            //});
 
             var newAdvertisement = new Realtea.Core.Entities.Advertisement
             {
                 Name = request.Name,
                 UserId = existingUser.Id,
                 Description = request.Description,
-               AdvertisementDetails = new AdvertisementDetails
+                AdvertisementDetails = new AdvertisementDetails
                 {
                     // TODO: DO NOT FORGET ABOUT THIS
                     //DealType = request.UpdateAdvertisementDetails.DealType,
@@ -80,6 +74,16 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             };
 
             await _advertisementRepository.AddAsync(newAdvertisement);
+
+            // Probably could be some kind of event to fire it and then update value of it.
+            await _paymentRepository.CreateAsync(new Entities.Payment
+            {
+                AdvertisementId = newAdvertisement.Id,
+                PaidAmount = 0.2m,
+                PaymentMadeAt = DateTimeOffset.Now,
+                PaymentDetail = PaymentDetail.Balance,
+                UserId = existingUser.Id,
+            });
 
             return new CreateAdvertisementResponse
             {

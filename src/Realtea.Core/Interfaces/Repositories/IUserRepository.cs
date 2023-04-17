@@ -10,6 +10,10 @@ namespace Realtea.Core.Interfaces.Repositories
         Task<User> GetByUsernameAsync(string username);
 
         Task<int> CreateAsync(User user, string password);
+
+        Task UpdateAsync(User user);
+
+        Task DeleteAsync(int userId);
     }
 }
 

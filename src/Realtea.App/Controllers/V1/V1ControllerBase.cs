@@ -1,5 +1,7 @@
 ﻿using System;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Realtea.App.HttpContextWrapper;
 
 namespace Realtea.App.Controllers.V1
 {
@@ -7,6 +9,16 @@ namespace Realtea.App.Controllers.V1
     [Produces("application/json")]
     public abstract class V1ControllerBase : ControllerBase
 	{
+        private readonly IHttpContextAccessorWrapper _wrapper;
+        public V1ControllerBase(IMediator mediator, IHttpContextAccessorWrapper wrapper) 
+        {
+            Mediator = mediator;
+            _wrapper = wrapper;
+        }
+
+        protected IMediator Mediator { get; }
+
+        protected int CurrentUserId => _wrapper.GetUserId();
 	}
 }
 

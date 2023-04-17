@@ -1,47 +1,50 @@
-﻿//using System;
-//using System.Security.Claims;
-//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Mvc;
-//using Realtea.Core.Interfaces.Services;
-//using Realtea.Core.Services;
-//using Realtea.Domain.Entities;
+﻿using System;
+using System.Security.Claims;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Realtea.App.HttpContextWrapper;
+using Realtea.Core.Commands.Account;
 
-//namespace Realtea.App.Controllers.V1
-//{
-//    [Authorize]
-//    public class AccountController : V1ControllerBase
-//    {
-//        private readonly IUserService _userService;
+namespace Realtea.App.Controllers.V1
+{
+    [Authorize]
+    public class AccountController : V1ControllerBase
+    {
+        public AccountController(IMediator mediator, IHttpContextAccessorWrapper httpContextAccessorWrapper) : base(mediator, httpContextAccessorWrapper)
+        {
+        }
 
-//        public AccountController(IUserService userService)
-//        {
-//            _userService = userService;
-//        }
+        // TODO: probably will require another service to upgrade account.
+        [HttpPatch]
+        [Route("upgrade")]
+        public async Task<ActionResult> UpgradeAccount()
+        {
+            //await _userService.UpgradeAccountAsync(User.FindFirstValue("sub"));
 
-//        // TODO: probably will require another service to upgrade account.
-//        [HttpPatch]
-//        [Route("upgrade")]
-//        public async Task<ActionResult> UpgradeAccount()
-//        {
-//            await _userService.UpgradeAccountAsync(User.FindFirstValue("sub"));
+            return NoContent();
+        }
 
-//            return NoContent();
-//        }
+        // TODO: ability to upgrade account details.
+        [HttpPatch]
+        public async Task<ActionResult> Edit([FromBody] EditAccountCommand command)
+        {
+            // Need to change Request/Response model.
+            command.UserId = CurrentUserId;
 
-//        // TODO: ability to upgrade account details.
-//        [HttpPatch]
-//        public async Task<ActionResult> Edit(EditUserDetailsDto request)
-//        {
-//            _userService.UpdateAsync();
-//        }
+            await Mediator.Send(command);
 
-//        // TODO: User should be able to delete their account.
-//        [HttpDelete]
-//        public async Task<ActionResult> Delete()
-//        {
-//            _userService.DeleteAsync();
-//        }
-//    }
-//}
+            return NoContent();
+        }
+
+        // TODO: User should be able to delete their account.
+        [HttpDelete]
+        public async Task<ActionResult> Delete()
+        {
+            await Mediator.Send(new DeleteAccountCommand { UserId = CurrentUserId });
+            return NoContent();
+        }
+    }
+}
 

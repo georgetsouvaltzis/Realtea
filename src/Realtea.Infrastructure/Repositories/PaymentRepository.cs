@@ -14,16 +14,22 @@ namespace Realtea.Infrastructure.Repositories
             _db = dbContext;
         }
 
-        public async Task CreateAsync(Payment payment)
+        public async Task<int> CreateAsync(Payment payment)
         {
             await _db.Payments.AddAsync(payment);
             await _db.SaveChangesAsync();
+
+            return payment.Id;
         }
 
-
-        public IQueryable<Payment> GetPaymentsQueryable()
+        public IQueryable<Payment> GetAsQueryable()
         {
-            return _db.Payments.AsQueryable();
+            throw new NotImplementedException();
+        }
+
+        public Task GetByIdAsync(int id)
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -5,5 +5,4 @@
         Balance = 0,
         Card = 1,
     }
-
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Infrastructure.Identity;
@@ -38,6 +39,13 @@ namespace Realtea.Infrastructure.Repositories
             return user.Id;
         }
 
+        public async Task DeleteAsync(int userId)
+        {
+            var existingIdentityUser = await _userManager.FindByIdAsync(userId.ToString());
+
+            await _userManager.DeleteAsync(existingIdentityUser);
+        }
+
         public async Task<User> GetByIdAsync(string userId)
         {
             var existingUser = await _userManager.FindByIdAsync(userId);
@@ -69,6 +77,27 @@ namespace Realtea.Infrastructure.Repositories
                 //LastName = existingUser.LastName,
                 UserName = existingUser.UserName,
             };
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            var identityUser = await _userManager.FindByIdAsync(user.Id.ToString());
+
+            if(user.FirstName != null)
+                identityUser.FirstName = user.FirstName;
+
+            if(user.LastName != null)
+                identityUser.LastName = user.LastName;
+
+            if(user.Email != null)
+                identityUser.Email = user.Email;
+
+            await _userManager.UpdateAsync(identityUser);
+
+            _dbContext.Entry<User>(user).State = EntityState.Modified;
+            _dbContext.Set<User>().Update(user);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
