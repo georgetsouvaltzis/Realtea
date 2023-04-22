@@ -39,7 +39,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             if (!result.Succeeded)
                 throw new ApiException($"Failed to log in.", FailureType.InvalidData);
 
-            var generatedToken = _jwtProvider.Generate(existingUser);
+            var generatedToken = await _jwtProvider.GenerateAsync(existingUser);
 
             return new LoginUserResult
             {

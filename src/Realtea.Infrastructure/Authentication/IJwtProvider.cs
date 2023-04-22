@@ -12,7 +12,7 @@ namespace Realtea.Infrastructure.Authentication
 {
     public interface IJwtProvider
     {
-        string Generate(ApplicationUser user);
+        Task<string> GenerateAsync(ApplicationUser user);
     }
 
     public class JwtProvider : IJwtProvider
@@ -24,15 +24,19 @@ namespace Realtea.Infrastructure.Authentication
         }
     
         /// TODO: When user updates their account type, they should get updated data.   
-        public string Generate(ApplicationUser user)
+        public async Task<string> GenerateAsync(ApplicationUser user)
         {
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")), SecurityAlgorithms.HmacSha256);
 
+            var existingUser = await _userManager.FindByIdAsync(user.Id.ToString());
+            var roles = await _userManager.GetRolesAsync(existingUser);
+            var expiresAt = DateTime.UtcNow.AddHours(1);
             //var role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Single();
             var claims = new Claim[]
-            {            
+            { 
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                //new Claim(type: "role", role)
+                new Claim("role",roles.First()),
+                new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToString())
             };
 
             var token = new JwtSecurityToken(
@@ -40,7 +44,7 @@ namespace Realtea.Infrastructure.Authentication
                 "aud",
                 claims,
                 null,
-                DateTime.Now.AddHours(1),
+                expiresAt,
                 signingCredentials);
 
             var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);

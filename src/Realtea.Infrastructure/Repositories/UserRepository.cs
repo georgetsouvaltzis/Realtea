@@ -9,9 +9,12 @@ namespace Realtea.Infrastructure.Repositories
 {
 	public class UserRepository : IUserRepository
 	{
+        private const string BrokerRole = "Broker";
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RealTeaDbContext _dbContext;
-		public UserRepository(UserManager<ApplicationUser> userManager, RealTeaDbContext dbContext)
+        private readonly RoleManager<ApplicationRole> _roleManager;
+		public UserRepository(UserManager<ApplicationUser> userManager, RealTeaDbContext dbContext, RoleManager<ApplicationRole> roleManager)
 		{
             _userManager = userManager;
             _dbContext = dbContext;
@@ -34,6 +37,8 @@ namespace Realtea.Infrastructure.Repositories
                 Balance = 1.00m,
                 UserId = user.Id,
             });
+
+            await _userManager.AddToRoleAsync(newApplicationUser, "Normal");
             await _dbContext.SaveChangesAsync();
 
             return user.Id;
@@ -79,6 +84,15 @@ namespace Realtea.Infrastructure.Repositories
             };
         }
 
+        public async Task<bool> IsInBrokerRoleAsync(int userId)
+        {
+            var existingUser = await _userManager.FindByIdAsync(userId.ToString());
+
+            var roles = await _userManager.GetRolesAsync(existingUser);
+
+            return roles.First().Equals(BrokerRole);
+        }
+
         public async Task UpdateAsync(User user)
         {
             var identityUser = await _userManager.FindByIdAsync(user.Id.ToString());
@@ -98,6 +112,13 @@ namespace Realtea.Infrastructure.Repositories
             _dbContext.Set<User>().Update(user);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpgradeToBrokerAsync(int userId)
+        {
+            var existingUser = await _userManager.FindByIdAsync(userId.ToString());
+
+            await _userManager.AddToRoleAsync(existingUser, BrokerRole);
         }
     }
 }

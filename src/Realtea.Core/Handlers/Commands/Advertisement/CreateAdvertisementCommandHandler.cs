@@ -41,8 +41,10 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 throw new InvalidOperationException(nameof(request.Description));
             }
 
+            var isInBrokerRole = await _userRepository.IsInBrokerRoleAsync(request.UserId);
+
             // Can move to domain later.
-            if (_advertisementRepository.HasExceededFreeAds(existingUser.Id) && existingUser.UserType == UserType.Regular && request.AdvertisementType == AdvertisementType.Free)
+            if (_advertisementRepository.HasExceededFreeAds(existingUser.Id) && !isInBrokerRole && request.AdvertisementType == AdvertisementType.Free)
                 throw new ApiException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.", FailureType.Insufficient);
 
             if (request.AdvertisementType == AdvertisementType.Paid && !existingUser.UserBalance.IsCapableOfPayment)

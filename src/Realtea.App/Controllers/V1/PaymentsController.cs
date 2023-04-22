@@ -38,23 +38,6 @@ namespace Realtea.App.Controllers.V1
 
 			return NoContent();
 		}
-
-		//[HttpGet]
-		//// Should retrieve user-related payment details
-		//// Should be able to filter them out by having query params.
-		//public async Task<ActionResult> GetPayments(int? userId, PaymentDetail? paymentDetail)
-		//{
-		//	await _paymentService.GetPaymentsAsync();
-
-		//	var queryable = _paymentRepository.GetPaymentsQueryable();
-		//	if (userId != null)
-		//		queryable = queryable.Where(x => x.UserId == userId);
-
-		//	if (paymentDetail != null)
-		//		queryable = queryable.Where(x => x.PaymentDetail == paymentDetail);
-
-		//	return Ok(await queryable.ToListAsync());
-		//}
 	}
 }
 

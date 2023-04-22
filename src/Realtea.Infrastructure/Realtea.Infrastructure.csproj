@@ -27,6 +27,8 @@
     <None Remove="Authentication\" />
     <None Remove="Results\" />
     <None Remove="Results\Auth\" />
+    <None Remove="Handlers\Commands\User\" />
+    <None Remove="Commands\User\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
@@ -38,6 +40,8 @@
     <Folder Include="Authentication\" />
     <Folder Include="Results\" />
     <Folder Include="Results\Auth\" />
+    <Folder Include="Handlers\Commands\User\" />
+    <Folder Include="Commands\User\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Realtea.Core\Realtea.Core.csproj" />

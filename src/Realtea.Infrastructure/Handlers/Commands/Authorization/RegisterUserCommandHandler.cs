@@ -12,8 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 namespace Realtea.Infrastructure.Handlers.Commands.Authorization
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
-    {
-        //private readonly UserManager<ApplicationUser> _userManager;
+    { 
         private readonly IUserRepository _userRepository;
 
         public RegisterUserCommandHandler(IUserRepository userRepository)
@@ -34,7 +33,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             if (existingUser != null)
                 throw new ApiException($"{request.UserName} is taken.", FailureType.Conflict);
 
-            var newUser = new User
+            var newUser = new Realtea.Core.Entities.User
             {
                 UserName = request.UserName,
             };
@@ -42,6 +41,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             var result = await _userRepository.CreateAsync(newUser, request.Password);
 
             if (result == 0)
+                //throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
                 throw new ApiException("Failed to create user", FailureType.InvalidData);
         }
     }

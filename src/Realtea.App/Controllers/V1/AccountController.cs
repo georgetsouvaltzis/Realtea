@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Requests.Account;
 using Realtea.Core.Commands.Account;
+using Realtea.Infrastructure.Commands.User;
+using Realtea.Infrastructure.Handlers.Commands.User;
 
 namespace Realtea.App.Controllers.V1
 {
@@ -22,6 +24,8 @@ namespace Realtea.App.Controllers.V1
         [Route("upgrade")]
         public async Task<ActionResult> UpgradeAccount()
         {
+            await Mediator.Send(new AddUserToBrokerRoleCommand { UserId = CurrentUserId });
+
             return NoContent();
         }
 
@@ -29,8 +33,6 @@ namespace Realtea.App.Controllers.V1
         [HttpPatch]
         public async Task<ActionResult> Edit([FromBody] EditAccountRequest request)
         {
-            // Need to change Request/Response model.
-
             var command = new EditAccountCommand
             {
                 UserId = CurrentUserId,

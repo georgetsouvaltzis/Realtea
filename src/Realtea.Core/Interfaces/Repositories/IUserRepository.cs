@@ -14,6 +14,10 @@ namespace Realtea.Core.Interfaces.Repositories
         Task UpdateAsync(User user);
 
         Task DeleteAsync(int userId);
+
+        Task<bool> IsInBrokerRoleAsync(int userId);
+
+        Task UpgradeToBrokerAsync(int userId);
     }
 }
 
