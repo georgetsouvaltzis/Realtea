@@ -3,6 +3,7 @@ using MediatR;
 using Realtea.Core.Commands.Advertisement;
 using Realtea.Core.Entities;
 using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Results.Advertisement;
 
@@ -29,9 +30,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
 
             var existingUser = await _userRepository.GetByIdAsync(request.UserId.ToString());
 
-            if (existingUser == null)
-                throw new InvalidOperationException(nameof(existingUser));
-
+            // It will be moved to ValidationFilter.
             if (string.IsNullOrEmpty(request.Name))
             {
                 throw new InvalidOperationException(nameof(request.Name));
@@ -42,20 +41,14 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 throw new InvalidOperationException(nameof(request.Description));
             }
 
-            var another = _advertisementRepository.GetAllAsync().GetAwaiter().GetResult().Where(x => x.UserId == existingUser.Id).Count();
-            // Need to change this logic so it returns IEnumerable
-            var existingAdCount = _advertisementRepository.GetAsQueryable().Where(x => x.Id == existingUser.Id).Count();
-
             // Can move to domain later.
-            if (another >= 5 && existingUser.UserType == UserType.Regular && request.AdvertisementType == AdvertisementType.Free)
-                throw new InvalidOperationException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.");
+            if (_advertisementRepository.HasExceededFreeAds(existingUser.Id) && existingUser.UserType == UserType.Regular && request.AdvertisementType == AdvertisementType.Free)
+                throw new ApiException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.", FailureType.Insufficient);
 
             if (request.AdvertisementType == AdvertisementType.Paid && !existingUser.UserBalance.IsCapableOfPayment)
             {
-                throw new InvalidOperationException("Insufficient balance.");
+                throw new ApiException("Insufficient balance.", FailureType.Insufficient);
             }
-
-            existingUser.UserBalance.Balance -= 0.20m;
 
             var newAdvertisement = new Realtea.Core.Entities.Advertisement
             {
@@ -65,14 +58,6 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 DealType = request.DealType,
                 Location = request.Location,
                 SquareMeter = request.SquareMeter,
-                //AdvertisementDetails = new AdvertisementDetails
-                //{
-                //    // TODO: DO NOT FORGET ABOUT THIS
-                //    //DealType = request.UpdateAdvertisementDetails.DealType,
-                //    //Location = request.UpdateAdvertisementDetails.Location.Value,
-                //    Price = request.CreateAdvertisementDetails.Price.Value,
-                //    SquareMeter = request.CreateAdvertisementDetails.SquareMeter.Value,
-                //}
             };
 
             await _advertisementRepository.AddAsync(newAdvertisement);

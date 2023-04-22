@@ -27,6 +27,8 @@
     <None Remove="Results\" />
     <None Remove="Results\Advertisement\" />
     <None Remove="Results\User\" />
+    <None Remove="AutoMapper" />
+    <None Remove="Profiles\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -48,8 +50,10 @@
     <Folder Include="Results\" />
     <Folder Include="Results\Advertisement\" />
     <Folder Include="Results\User\" />
+    <Folder Include="Profiles\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Realtea.Core.Entities;
+using Realtea.Core.Enums;
 using Realtea.Core.Interfaces.Repositories;
 
 namespace Realtea.Infrastructure.Repositories
@@ -75,6 +76,18 @@ namespace Realtea.Infrastructure.Repositories
             await _db.SaveChangesAsync();
 
             return advertisement;
+        }
+
+        public bool HasExceededFreeAds(int userId)
+        {
+            const int FreeAdsLimit = 5;
+
+            var freeAdsCount = _db
+                .Advertisements
+                .Where(x => x.Id == userId && x.AdvertisementType == AdvertisementType.Free)
+                .Count();
+
+            return freeAdsCount >= FreeAdsLimit;
         }
     }
 }

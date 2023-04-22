@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Realtea.Core.Entities;
+using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
 using Realtea.Infrastructure.Authentication;
 using Realtea.Infrastructure.Commands.Authorization;
 using Realtea.Infrastructure.Identity;
@@ -30,12 +32,12 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             var existingUser = await _userManager.FindByNameAsync(request.UserName);
 
             if (existingUser == null)
-                throw new InvalidOperationException($"{request.UserName} does not exist.");
+                throw new ApiException($"{request.UserName} does not exist.", FailureType.Absent);
 
             var result = await _signInManager.CheckPasswordSignInAsync(existingUser, request.Password, false);
 
             if (!result.Succeeded)
-                throw new InvalidOperationException($"Failed to log in.");
+                throw new ApiException($"Failed to log in.", FailureType.InvalidData);
 
             var generatedToken = _jwtProvider.Generate(existingUser);
 

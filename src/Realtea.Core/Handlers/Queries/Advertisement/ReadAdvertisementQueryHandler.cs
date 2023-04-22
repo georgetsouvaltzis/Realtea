@@ -1,6 +1,8 @@
 ﻿using System;
+using AutoMapper;
 using MediatR;
 using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Queries;
 using Realtea.Core.Results.Advertisement;
@@ -9,11 +11,13 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
 {
     public class ReadAdvertisementQueryHandler : IRequestHandler<ReadAdvertisementQuery, AdvertisementResult>
     {
+        private readonly IMapper _mapper;
         private readonly IAdvertisementRepository _advertisementRepository;
 
-        public ReadAdvertisementQueryHandler(IAdvertisementRepository advertisementRepository)
+        public ReadAdvertisementQueryHandler(IAdvertisementRepository advertisementRepository, IMapper mapper)
         {
             _advertisementRepository = advertisementRepository;
+            _mapper = mapper;
         }
 
         public async Task<AdvertisementResult> Handle(ReadAdvertisementQuery request, CancellationToken cancellationToken)
@@ -21,42 +25,13 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
             var existingAd = await _advertisementRepository.GetByIdAsync(request.Id);
 
             if (existingAd == null)
-                throw new InvalidOperationException(nameof(existingAd));
+                throw new ApiException($"Advertisement with ID: {request.Id} does not exist.", FailureType.Absent);
 
-            return new AdvertisementResult
-            {
-                Id = existingAd.Id,
-                UserId = existingAd.UserId,
-                Name = existingAd.Name,
-                Description = existingAd.Description,
-                AdvertisementType = existingAd.AdvertisementType,
-                IsActive = existingAd.IsActive,
-                DealType = existingAd.DealType,
-                Location = existingAd.Location,
-                Price = existingAd.Price,
-                SquareMeter = existingAd.SquareMeter,
-            };
+
+            var mapped = _mapper.Map<AdvertisementResult>(existingAd);
+
+            return mapped;
         }
-
-        //private DealTypeEnum MapDealType(DealType dealType)
-        //{
-        //    return dealType switch
-        //    {
-        //        DealType.Mortgage => DealTypeEnum.Mortgage,
-        //        DealType.Sale => DealTypeEnum.Sale,
-        //        DealType.Rental => DealTypeEnum.Rental,
-        //    };
-        //}
-
-        //private LocationEnum MapLocation(Location location)
-        //{
-        //    return location switch
-        //    {
-        //        Location.Tbilisi => LocationEnum.Tbilisi,
-        //        Location.Batumi => LocationEnum.Batumi,
-        //        Location.Kutaisi => LocationEnum.Kutaisi,
-        //    };
-        //}
     }
 }
 

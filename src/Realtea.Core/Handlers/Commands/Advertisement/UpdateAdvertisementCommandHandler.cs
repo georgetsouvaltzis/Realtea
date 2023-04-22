@@ -1,7 +1,9 @@
 ﻿using System;
+using AutoMapper;
 using MediatR;
 using Realtea.Core.Commands.Advertisement;
 using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Results.Advertisement;
 
@@ -10,10 +12,11 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
 	public class UpdateAdvertisementCommandHandler : IRequestHandler<UpdateAdvertisementCommand, UpdateAdvertisementResult>
 	{
         private readonly IAdvertisementRepository _advertisementRepository;
-		public UpdateAdvertisementCommandHandler(IAdvertisementRepository advertisementRepository)
+        private readonly IMapper _mapper;
+		public UpdateAdvertisementCommandHandler(IAdvertisementRepository advertisementRepository, IMapper mapper)
 		{
             _advertisementRepository = advertisementRepository;
-
+            _mapper = mapper;
 		}
 
         public async Task<UpdateAdvertisementResult> Handle(UpdateAdvertisementCommand request, CancellationToken cancellationToken)
@@ -21,7 +24,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             var existingAd = await _advertisementRepository.GetByIdAsync(request.Id);
 
             if (existingAd == null)
-                throw new InvalidOperationException(nameof(existingAd));
+                throw new ApiException($"Advertisement with ID: {request.Id} does not exist.", FailureType.Absent);
 
 
             existingAd.Name = request.Name ?? existingAd.Name;
@@ -31,75 +34,41 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
 
             if(request.DealType != null)
             {
-
+                existingAd.DealType = request.DealType.Value;
             }
 
             if(request.Location != null)
             {
-
+                existingAd.Location = request.Location.Value;
             }
 
             if(request.Price != null)
             {
-
+                existingAd.Price = request.Price.Value;
             }
 
             if(request.SquareMeter != null)
             {
-
+                existingAd.SquareMeter = request.SquareMeter.Value;
             }
-
-            //if (request.UpdateAdvertisementDetails != null)
-            //{
-            //    // TODO: DO NOT FORGET ABOUT THIS
-            //    //existingAd.AdvertisementDetails.DealType = request.UpdateAdvertisementDetails.DealType ?? existingAd.AdvertisementDetails.DealType;
-            //    //existingAd.AdvertisementDetails.Location = request.UpdateAdvertisementDetails.Location ?? existingAd.AdvertisementDetails.Location;
-            //    existingAd.AdvertisementDetails.Price = request.UpdateAdvertisementDetails.Price ?? existingAd.AdvertisementDetails.Price;
-            //    existingAd.AdvertisementDetails.SquareMeter = request.UpdateAdvertisementDetails.Price ?? existingAd.AdvertisementDetails.Price;
-            //}
-
 
             var modifiedAd = await _advertisementRepository.UpdateAsync(existingAd);
 
-            return new UpdateAdvertisementResult
-            {
-                Name = modifiedAd.Name,
-                Description = modifiedAd.Description,
-                IsActive = modifiedAd.IsActive,
-                AdvertisementType = modifiedAd.AdvertisementType,
-                DealType = modifiedAd.DealType,
-                Location = modifiedAd.Location,
-                SquareMeter = modifiedAd.SquareMeter,
-                Price = modifiedAd.Price,
-                //UpdateAdvertisementDetails = new UpdateAdvertisementDetailsResponse
-                //{
-                //    DealType = MapDealType(modifiedAd.AdvertisementDetails.DealType),
-                //    Location = MapLocation(modifiedAd.AdvertisementDetails.Location),
-                //    SquareMeter = modifiedAd.AdvertisementDetails.SquareMeter,
-                //    Price = modifiedAd.AdvertisementDetails.Price,
-                //}
-            };
+            var mapped = _mapper.Map<UpdateAdvertisementResult>(modifiedAd);
+
+            return mapped;
+            //return new UpdateAdvertisementResult
+            //{
+            //    Name = modifiedAd.Name,
+            //    Description = modifiedAd.Description,
+            //    IsActive = modifiedAd.IsActive,
+            //    AdvertisementType = modifiedAd.AdvertisementType,
+            //    DealType = modifiedAd.DealType,
+            //    Location = modifiedAd.Location,
+            //    SquareMeter = modifiedAd.SquareMeter,
+            //    Price = modifiedAd.Price,
+            //};
         }
-
-        //private DealTypeEnum MapDealType(DealType dealType)
-        //{
-        //    return dealType switch
-        //    {
-        //        DealType.Mortgage => DealTypeEnum.Mortgage,
-        //        DealType.Sale => DealTypeEnum.Sale,
-        //        DealType.Rental => DealTypeEnum.Rental,
-        //    };
-        //}
-
-        //private LocationEnum MapLocation(Location location)
-        //{
-        //    return location switch
-        //    {
-        //        Location.Tbilisi => LocationEnum.Tbilisi,
-        //        Location.Batumi => LocationEnum.Batumi,
-        //        Location.Kutaisi => LocationEnum.Kutaisi,
-        //    };
-        //}
     }
 }
 

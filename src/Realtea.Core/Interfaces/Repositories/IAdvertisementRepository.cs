@@ -17,5 +17,7 @@ namespace Realtea.Core.Interfaces.Repositories
         Task<Advertisement> UpdateAsync(Advertisement advertisement);
 
         IQueryable<Advertisement?> GetAsQueryable();
+
+        bool HasExceededFreeAds(int userId);
     }
 }

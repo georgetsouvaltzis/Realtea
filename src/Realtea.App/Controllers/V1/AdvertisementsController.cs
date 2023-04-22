@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Realtea.App.Models;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Models;
 using Realtea.Core.Enums;
@@ -31,7 +30,6 @@ namespace Realtea.App.Controllers.V1
             _mapper = mapper;
         }
 
-        // should update Based on IsActive, Desc/asc, etc.
         [HttpGet]
         public async Task<ActionResult> GetAll([FromQuery] ReadFilteredAdvertisementRequest request)
         {

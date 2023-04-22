@@ -3,6 +3,7 @@ using MediatR;
 using Realtea.Core.Commands.Payment;
 using Realtea.Core.Entities;
 using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 
 namespace Realtea.Core.Handlers.Commands.Payment
@@ -21,7 +22,7 @@ namespace Realtea.Core.Handlers.Commands.Payment
             var existingUser = await _userRepository.GetByIdAsync(request.UserId.ToString());
 
             if (existingUser == null)
-                throw new InvalidOperationException(nameof(existingUser));
+                throw new ApiException($"User with ID: {request.UserId} does not exist.", FailureType.Absent);
 
             await _paymentRepository.CreateAsync(new Entities.Payment
             {

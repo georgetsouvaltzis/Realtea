@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 using MediatR;
 using Realtea.Core.Enums;
 using Realtea.Core.Interfaces.Repositories;
@@ -10,11 +11,12 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
 {
     public class ReadFukteredAdvertisementsQueryHandler : IRequestHandler<ReadFilteredAdvertisementsQuery, IEnumerable<AdvertisementResult>>
     {
-
+        private readonly IMapper _mapper;
         private readonly IAdvertisementRepository _advertisementRepository;
-        public ReadFukteredAdvertisementsQueryHandler(IAdvertisementRepository advertisementRepository)
+        public ReadFukteredAdvertisementsQueryHandler(IAdvertisementRepository advertisementRepository, IMapper mapper)
         {
             _advertisementRepository = advertisementRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<AdvertisementResult>> Handle(ReadFilteredAdvertisementsQuery request, CancellationToken cancellationToken)
@@ -39,19 +41,9 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
             if (request.Location.HasValue)
                 queryable = queryable.Where(x => x.Location == request.Location.Value);
 
-            var asdf = queryable.ToList();
+            var result = queryable.ToList();
 
-            return asdf.Select(x => new AdvertisementResult
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                AdvertisementType = x.AdvertisementType,
-                DealType = x.DealType,
-                Location = x.Location,
-                Price = x.Price,
-                SquareMeter = x.SquareMeter
-            });
+            return result.Select(x => _mapper.Map<AdvertisementResult>(x));
         }
     }
 }

@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Realtea.Core.Entities;
+using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Infrastructure.Commands.Authorization;
 using Realtea.Infrastructure.Identity;
@@ -25,12 +27,12 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
                 throw new ArgumentNullException(nameof(request));
 
             if (request.Password != request.ConfirmedPassword)
-                throw new InvalidOperationException("Passwords do not match.");
+                throw new ApiException("Passwords do not match.", FailureType.InvalidData);
 
             var existingUser = await _userRepository.GetByUsernameAsync(request.UserName);
 
             if (existingUser != null)
-                throw new InvalidOperationException($"{request.UserName} is taken.");
+                throw new ApiException($"{request.UserName} is taken.", FailureType.Conflict);
 
             var newUser = new User
             {
@@ -40,8 +42,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             var result = await _userRepository.CreateAsync(newUser, request.Password);
 
             if (result == 0)
-                //throw new InvalidOperationException($"failed to create user. Failure reason: {string.Join(",", result.Errors.Select(x => x.Description))}");
-                throw new InvalidOperationException("Failed to create user");
+                throw new ApiException("Failed to create user", FailureType.InvalidData);
         }
     }
 }

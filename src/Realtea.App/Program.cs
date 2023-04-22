@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Realtea.App.Filters;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Identity.Authorization.Handlers.Advertisement;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
@@ -12,6 +13,7 @@ using Realtea.App.Profiles;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
+using Realtea.Core.Profiles;
 using Realtea.Infrastructure;
 using Realtea.Infrastructure.Authentication;
 using Realtea.Infrastructure.Handlers.Commands.Authorization;
@@ -25,13 +27,16 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(Program), typeof(AdvertisementToAdvertisementResultProfile));
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -77,7 +82,7 @@ builder.Services.AddAuthorization(options =>
 
     options.DefaultPolicy = builder.Build();
 
-    options.AddPolicy("IsEligibleForAdvertisementDelete", policy =>
+    options.AddPolicy("IsEligibleForAdvemrtisementDelete", policy =>
     {
         policy.AddRequirements(new IsEligibleForAdvertisementDeleteRequirement());
     });
@@ -88,11 +93,9 @@ builder.Services.AddScoped<IHttpContextAccessorWrapper, HttpContextAccessorWrapp
 builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,IsEligibleForAdvertisementUpdateAuthHandler>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
-//builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<RealTeaDbContext>(options => options.UseInMemoryDatabase("realteaDb"));
 
