@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using Realtea.Core.Entities;
+﻿using Realtea.Core.Entities;
 
 namespace Realtea.Core.Interfaces.Repositories
 {

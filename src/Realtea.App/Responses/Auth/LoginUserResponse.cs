@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.App.Responses.Auth
+﻿namespace Realtea.App.Responses.Auth
 {
 	public class LoginUserResponse
 	{

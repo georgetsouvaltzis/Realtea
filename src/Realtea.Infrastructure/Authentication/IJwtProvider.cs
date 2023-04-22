@@ -1,12 +1,9 @@
-﻿
-
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using Realtea.Infrastructure.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Realtea.Core.Entities;
-using Realtea.Infrastructure.Identity;
 
 namespace Realtea.Infrastructure.Authentication
 {

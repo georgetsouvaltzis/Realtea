@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Commands.Payments;
 using Realtea.Core.Interfaces.Repositories;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Realtea.App.Requests.Advertisement;
 using Realtea.Core.Commands.Advertisement;
 

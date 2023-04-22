@@ -1,13 +1,8 @@
-﻿using System;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Realtea.Core.Entities;
+﻿using MediatR;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Infrastructure.Commands.Authorization;
-using Realtea.Infrastructure.Identity;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Realtea.Infrastructure.Handlers.Commands.Authorization
 {

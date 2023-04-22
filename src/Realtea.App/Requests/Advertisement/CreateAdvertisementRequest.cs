@@ -1,6 +1,4 @@
-﻿using System;
-using Realtea.App.Enums;
-using Realtea.Core.Enums;
+﻿using Realtea.App.Enums;
 
 namespace Realtea.App.Requests.Advertisement
 {

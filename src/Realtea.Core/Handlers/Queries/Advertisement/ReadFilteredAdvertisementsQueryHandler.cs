@@ -1,9 +1,6 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
-using Realtea.Core.Enums;
 using Realtea.Core.Interfaces.Repositories;
-using Realtea.Core.Models;
 using Realtea.Core.Queries;
 using Realtea.Core.Results.Advertisement;
 

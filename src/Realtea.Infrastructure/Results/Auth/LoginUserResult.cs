@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.Infrastructure.Results.Auth
+﻿namespace Realtea.Infrastructure.Results.Auth
 {
 	public class LoginUserResult
 	{

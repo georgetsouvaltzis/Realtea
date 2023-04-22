@@ -1,18 +1,13 @@
-﻿using System.Security.Claims;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Realtea.Core.Interfaces;
-using Realtea.Core.Models;
-using Realtea.Core.Enums;
-using Realtea.App.Enums;
-using MediatR;
-using Realtea.Core.Queries;
 using Realtea.App.HttpContextWrapper;
-using Realtea.Core.Commands.Advertisement;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 using Realtea.App.Requests.Advertisement;
 using Realtea.App.Responses.Advertisement;
-using AutoMapper;
+using Realtea.Core.Commands.Advertisement;
+using Realtea.Core.Queries;
 
 namespace Realtea.App.Controllers.V1
 {

@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.Core.Entities
+﻿namespace Realtea.Core.Entities
 {
     public abstract class BaseEntity
     {

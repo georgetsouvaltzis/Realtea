@@ -1,11 +1,10 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Enums;
 using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Commands.Advertisement
 {
-	public class CreateAdvertisementCommand : IRequest<CreateAdvertisementResult>
+    public class CreateAdvertisementCommand : IRequest<CreateAdvertisementResult>
 	{
         public int UserId { get; set; }
 

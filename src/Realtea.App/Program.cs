@@ -1,27 +1,19 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Realtea.App.Filters;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Identity.Authorization.Handlers.Advertisement;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
-using Realtea.App.Profiles;
-using Realtea.Core.Entities;
-using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Profiles;
 using Realtea.Infrastructure;
 using Realtea.Infrastructure.Authentication;
-using Realtea.Infrastructure.Handlers.Commands.Authorization;
 using Realtea.Infrastructure.Identity;
 using Realtea.Infrastructure.Repositories;
 using Realtea.Infrastructure.Seeder;
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

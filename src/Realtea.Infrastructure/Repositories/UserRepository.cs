@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces.Repositories;
@@ -7,7 +6,7 @@ using Realtea.Infrastructure.Identity;
 
 namespace Realtea.Infrastructure.Repositories
 {
-	public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
 	{
         private const string BrokerRole = "Broker";
 

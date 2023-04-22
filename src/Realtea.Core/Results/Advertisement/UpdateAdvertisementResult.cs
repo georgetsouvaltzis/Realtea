@@ -1,9 +1,8 @@
-﻿using System;
-using Realtea.Core.Enums;
+﻿using Realtea.Core.Enums;
 
 namespace Realtea.Core.Results.Advertisement
 {
-	public class UpdateAdvertisementResult
+    public class UpdateAdvertisementResult
 	{
         public string Name { get; set; }
 

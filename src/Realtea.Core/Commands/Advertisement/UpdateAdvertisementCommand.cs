@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Enums;
 using Realtea.Core.Results.Advertisement;
 

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
+using System.Net;
 
 namespace Realtea.App.Filters
 {

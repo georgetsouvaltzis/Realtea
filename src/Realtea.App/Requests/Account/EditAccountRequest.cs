@@ -1,8 +1,6 @@
-﻿
-using System;
-namespace Realtea.App.Requests.Account
+﻿namespace Realtea.App.Requests.Account
 {
-	public class EditAccountRequest
+    public class EditAccountRequest
 	{
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

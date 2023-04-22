@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.Core.Enums
+﻿namespace Realtea.Core.Enums
 {
     public enum FailureType
     {

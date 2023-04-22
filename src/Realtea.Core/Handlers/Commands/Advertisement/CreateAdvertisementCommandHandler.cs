@@ -1,7 +1,5 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Commands.Advertisement;
-using Realtea.Core.Entities;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;

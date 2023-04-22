@@ -1,5 +1,4 @@
-﻿using System;
-using Realtea.Core.Enums;
+﻿using Realtea.Core.Enums;
 
 namespace Realtea.Core.Entities
 {

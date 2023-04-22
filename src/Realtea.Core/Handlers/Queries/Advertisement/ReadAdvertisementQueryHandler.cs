@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;

@@ -1,11 +1,10 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Commands.Account;
 using Realtea.Core.Interfaces.Repositories;
 
 namespace Realtea.Core.Handlers.Commands.Account
 {
-	public class EditAccountCommandHandler : IRequestHandler<EditAccountCommand>
+    public class EditAccountCommandHandler : IRequestHandler<EditAccountCommand>
 	{
 		private readonly IUserRepository _userRepository;
 		public EditAccountCommandHandler(IUserRepository userRepository)

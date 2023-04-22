@@ -1,9 +1,8 @@
-﻿using System;
-using Realtea.App.Enums;
+﻿using Realtea.App.Enums;
 
 namespace Realtea.App.Requests.Advertisement
 {
-	public class UpdateAdvertisementRequest
+    public class UpdateAdvertisementRequest
 	{
         public string? Name { get; set; }
 

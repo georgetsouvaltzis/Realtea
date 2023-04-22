@@ -1,14 +1,10 @@
-﻿using System;
-using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Requests.Account;
 using Realtea.Core.Commands.Account;
 using Realtea.Infrastructure.Commands.User;
-using Realtea.Infrastructure.Handlers.Commands.User;
 
 namespace Realtea.App.Controllers.V1
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Realtea.Core.Commands.Advertisement;
 using Realtea.Core.Enums;
@@ -9,7 +8,7 @@ using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Handlers.Commands.Advertisement
 {
-	public class UpdateAdvertisementCommandHandler : IRequestHandler<UpdateAdvertisementCommand, UpdateAdvertisementResult>
+    public class UpdateAdvertisementCommandHandler : IRequestHandler<UpdateAdvertisementCommand, UpdateAdvertisementResult>
 	{
         private readonly IAdvertisementRepository _advertisementRepository;
         private readonly IMapper _mapper;

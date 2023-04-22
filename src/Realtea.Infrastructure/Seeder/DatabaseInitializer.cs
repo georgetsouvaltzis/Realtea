@@ -4,7 +4,6 @@ using Realtea.Core.Entities;
 using Realtea.Core.Enums;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Infrastructure.Identity;
-using Realtea.Infrastructure.Repositories;
 
 namespace Realtea.Infrastructure.Seeder
 {

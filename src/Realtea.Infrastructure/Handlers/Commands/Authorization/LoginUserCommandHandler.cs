@@ -1,7 +1,5 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Realtea.Core.Entities;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
 using Realtea.Infrastructure.Authentication;

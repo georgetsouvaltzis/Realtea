@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Results.Advertisement;
 
 namespace Realtea.Core.Queries

@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.App.Responses.Advertisement
+﻿namespace Realtea.App.Responses.Advertisement
 {
     public class CreateAdvertisementResponse
     {

@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.App.Requests.Auth
+﻿namespace Realtea.App.Requests.Auth
 {
 	public class RegisterUserRequest
 	{

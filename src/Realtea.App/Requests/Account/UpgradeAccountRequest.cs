@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.App.Requests.Account
+﻿namespace Realtea.App.Requests.Account
 {
 	public class UpgradeAccountRequest
 	{

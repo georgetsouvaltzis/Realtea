@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Realtea.Core.Entities;
 using Realtea.Infrastructure.Identity;
 
 namespace Realtea.Infrastructure
 {
-    //public class RealTeaDbContext : IdentityDbContext<User, IdentityRole<int>, int
     public class RealTeaDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
         public RealTeaDbContext(DbContextOptions<RealTeaDbContext> options) : base(options)
         {
-
         }
 
         public DbSet<Advertisement> Advertisements { get; set; }

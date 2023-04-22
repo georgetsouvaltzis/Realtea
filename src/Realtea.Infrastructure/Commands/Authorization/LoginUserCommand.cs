@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Infrastructure.Results.Auth;
 
 namespace Realtea.Infrastructure.Commands.Authorization

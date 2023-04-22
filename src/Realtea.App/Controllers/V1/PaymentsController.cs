@@ -1,15 +1,8 @@
-﻿using System;
-using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Realtea.App.HttpContextWrapper;
 using Realtea.Core.Commands.Payment;
-using Realtea.Core.Entities;
-using Realtea.Core.Enums;
-using Realtea.Core.Interfaces;
 using Realtea.Core.Interfaces.Repositories;
 
 namespace Realtea.App.Controllers.V1

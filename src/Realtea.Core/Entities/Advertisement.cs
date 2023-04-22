@@ -1,9 +1,8 @@
-﻿using System;
-using Realtea.Core.Enums;
+﻿using Realtea.Core.Enums;
 
 namespace Realtea.Core.Entities
 {
-	public class Advertisement : BaseEntity
+    public class Advertisement : BaseEntity
 	{
         public string Name { get; set; } = string.Empty;
 

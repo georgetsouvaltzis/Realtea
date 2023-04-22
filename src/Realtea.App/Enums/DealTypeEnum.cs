@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.App.Enums
+﻿namespace Realtea.App.Enums
 {
     public enum DealTypeEnum
     {

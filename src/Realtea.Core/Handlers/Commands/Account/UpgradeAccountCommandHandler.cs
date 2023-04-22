@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Realtea.Core.Commands.Account;
 
 namespace Realtea.Core.Handlers.Commands.Account

@@ -1,7 +1,5 @@
-﻿using System;
-using Realtea.Core.Entities;
+﻿using Realtea.Core.Entities;
 using Realtea.Core.Interfaces.Repositories;
-
 
 namespace Realtea.Infrastructure.Repositories
 {

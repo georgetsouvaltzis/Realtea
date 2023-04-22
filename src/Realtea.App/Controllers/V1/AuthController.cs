@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Requests.Auth;
 using Realtea.App.Responses.Auth;
-using Realtea.Core.Entities;
 using Realtea.Infrastructure.Commands.Authorization;
 
 namespace Realtea.App.Controllers.V1

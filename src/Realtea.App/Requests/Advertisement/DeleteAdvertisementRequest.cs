@@ -1,5 +1,4 @@
-﻿using System;
-namespace Realtea.App.Requests.Advertisement
+﻿namespace Realtea.App.Requests.Advertisement
 {
 	public class DeleteAdvertisementRequest
 	{
