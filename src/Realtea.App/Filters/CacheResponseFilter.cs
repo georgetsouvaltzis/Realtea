@@ -41,7 +41,7 @@ namespace Realtea.App.Filters
 
             var nextResult = await next();
 
-            if(nextResult.Result is OkObjectResult ok)
+            if (nextResult.Result is OkObjectResult ok)
             {
                 cachingService.Set(generatedKey, ok.Value);
             }
