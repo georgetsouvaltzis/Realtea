@@ -26,11 +26,11 @@ namespace Realtea.Infrastructure.Seeder
             await roleManager.CreateAsync(new ApplicationRole { Name = "Normal" });
             await roleManager.CreateAsync(new ApplicationRole { Name = "Broker" });
 
-            await userManager.CreateAsync(new ApplicationUser
-            {
-                Id = 1,
-                UserName = "testuser"
-            });
+            //await userManager.CreateAsync(new ApplicationUser
+            //{
+            //    Id = 1,
+            //    UserName = "testuser"
+            //});
 
             await db.SaveChangesAsync();
 

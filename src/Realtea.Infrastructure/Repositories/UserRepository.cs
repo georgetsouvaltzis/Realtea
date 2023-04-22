@@ -7,26 +7,27 @@ using Realtea.Infrastructure.Identity;
 namespace Realtea.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
-	{
+    {
         private const string BrokerRole = "Broker";
+        private const string NormalRole = "Normal";
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RealTeaDbContext _dbContext;
         private readonly RoleManager<ApplicationRole> _roleManager;
-		public UserRepository(UserManager<ApplicationUser> userManager, RealTeaDbContext dbContext, RoleManager<ApplicationRole> roleManager)
-		{
+        public UserRepository(UserManager<ApplicationUser> userManager, RealTeaDbContext dbContext, RoleManager<ApplicationRole> roleManager)
+        {
             _userManager = userManager;
             _dbContext = dbContext;
-		}
+        }
 
         public async Task<int> CreateAsync(User user, string password)
         {
             var newApplicationUser = new ApplicationUser
-            { 
+            {
                 UserName = user.UserName,
             };
 
-            await _userManager.CreateAsync(newApplicationUser, password);
+            var result = await _userManager.CreateAsync(newApplicationUser, password);
 
             user.Id = newApplicationUser.Id;
 
@@ -96,13 +97,13 @@ namespace Realtea.Infrastructure.Repositories
         {
             var identityUser = await _userManager.FindByIdAsync(user.Id.ToString());
 
-            if(user.FirstName != null)
+            if (user.FirstName != null)
                 identityUser.FirstName = user.FirstName;
 
-            if(user.LastName != null)
+            if (user.LastName != null)
                 identityUser.LastName = user.LastName;
 
-            if(user.Email != null)
+            if (user.Email != null)
                 identityUser.Email = user.Email;
 
             await _userManager.UpdateAsync(identityUser);
@@ -116,7 +117,11 @@ namespace Realtea.Infrastructure.Repositories
         public async Task UpgradeToBrokerAsync(int userId)
         {
             var existingUser = await _userManager.FindByIdAsync(userId.ToString());
+            var existingRoles = await _userManager.GetRolesAsync(existingUser);
 
+            if (existingRoles.Any(x => x.Equals(NormalRole)))
+                await _userManager.RemoveFromRoleAsync(existingUser, NormalRole);
+            
             await _userManager.AddToRoleAsync(existingUser, BrokerRole);
         }
     }

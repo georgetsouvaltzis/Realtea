@@ -8,7 +8,6 @@ namespace Realtea.App.Requests.Advertisement
 
         public string Description { get; set; }
 
-        // DO NOT FORGET TO CHANGE IT.
         public AdvertisementTypeEnum AdvertisementType { get; set; }
 
         public DealTypeEnum DealType { get; set; }

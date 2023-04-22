@@ -20,7 +20,6 @@ namespace Realtea.Infrastructure.Authentication
             _userManager = userManager;
         }
     
-        /// TODO: When user updates their account type, they should get updated data.   
         public async Task<string> GenerateAsync(ApplicationUser user)
         {
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")), SecurityAlgorithms.HmacSha256);

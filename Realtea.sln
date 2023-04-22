@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3DAD3C9C-CA8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtea.App", "src\Realtea.App\Realtea.App.csproj", "{001B7878-97FB-4EAD-836B-CF4B1B3049F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Realtea.Infrastructure", "src\Realtea.Infrastructure\Realtea.Infrastructure.csproj", "{66F35ABA-4535-4E70-8647-3F89EFF85783}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtea.Infrastructure", "src\Realtea.Infrastructure\Realtea.Infrastructure.csproj", "{66F35ABA-4535-4E70-8647-3F89EFF85783}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Realtea.Core", "src\Realtea.Core\Realtea.Core.csproj", "{9FF7B924-3627-4B6F-BA8F-9B249DAB1787}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtea.Core", "src\Realtea.Core\Realtea.Core.csproj", "{9FF7B924-3627-4B6F-BA8F-9B249DAB1787}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

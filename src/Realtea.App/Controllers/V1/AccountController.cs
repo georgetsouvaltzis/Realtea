@@ -15,7 +15,6 @@ namespace Realtea.App.Controllers.V1
         {
         }
 
-        // TODO: probably will require another service to upgrade account.
         [HttpPatch]
         [Route("upgrade")]
         public async Task<ActionResult> UpgradeAccount()
@@ -25,7 +24,6 @@ namespace Realtea.App.Controllers.V1
             return NoContent();
         }
 
-        // TODO: ability to upgrade account details.
         [HttpPatch]
         public async Task<ActionResult> Edit([FromBody] EditAccountRequest request)
         {
@@ -42,7 +40,6 @@ namespace Realtea.App.Controllers.V1
             return NoContent();
         }
 
-        // TODO: User should be able to delete their account.
         [HttpDelete]
         public async Task<ActionResult> Delete()
         {
