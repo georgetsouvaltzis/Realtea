@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Realtea.App.Filters;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 using Realtea.App.Requests.Advertisement;
@@ -26,6 +27,7 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpGet]
+        [CacheResponse]
         public async Task<ActionResult> GetAll([FromQuery] ReadFilteredAdvertisementRequest request)
         {
             var query = _mapper.Map<ReadFilteredAdvertisementsQuery>(request);
@@ -39,6 +41,7 @@ namespace Realtea.App.Controllers.V1
 
         [HttpGet]
         [Route("{id:int}")]
+        [CacheResponse]
         public async Task<ActionResult> GetById([FromRoute] ReadAdvertisementRequest request)
         {
             var command = new ReadAdvertisementQuery { Id = request.Id };
