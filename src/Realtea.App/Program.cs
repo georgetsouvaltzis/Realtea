@@ -9,11 +9,12 @@ using Realtea.App.Identity.Authorization.Handlers.Advertisement;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Profiles;
-using Realtea.Infrastructure;
+using Realtea.Infrastructure;   
 using Realtea.Infrastructure.Authentication;
 using Realtea.Infrastructure.Identity;
 using Realtea.Infrastructure.Repositories;
 using Realtea.Infrastructure.Seeder;
+using Realtea.Infrastructure.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -29,6 +30,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddAutoMapper(typeof(Program), typeof(AdvertisementToAdvertisementResultProfile));
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -46,7 +49,6 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 
 builder.Services.AddAuthentication(auth =>
 {
-
     auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,9 +61,9 @@ builder.Services.AddAuthentication(auth =>
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "iss",
-            ValidAudience = "aud",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")),
+            ValidIssuer = builder.Configuration["JwtSettings:ValidIssuer"],
+            ValidAudience = builder.Configuration["JwtSettings:ValidAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SigningKey"])),
         };
     });
 
@@ -76,9 +78,13 @@ builder.Services.AddAuthorization(options =>
 
     options.DefaultPolicy = builder.Build();
 
-    options.AddPolicy("IsEligibleForAdvemrtisementDelete", policy =>
+    options.AddPolicy("IsEligibleForAdvertisementDelete", policy =>
     {
         policy.AddRequirements(new IsEligibleForAdvertisementDeleteRequirement());
+    });
+    options.AddPolicy("IsEligibleForAdvertisementUpdate", policy =>
+    {
+        policy.AddRequirements(new IsEligibleForAdvertisementUpdateRequirement());
     });
 });
 

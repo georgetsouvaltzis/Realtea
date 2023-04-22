@@ -22,4 +22,3 @@ namespace Realtea.App.Identity.Authorization.Handlers.Advertisement
         }
     }
 }
-

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Realtea.Infrastructure.Identity;
+using Realtea.Infrastructure.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,29 +17,30 @@ namespace Realtea.Infrastructure.Authentication
     public class JwtProvider : IJwtProvider
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public JwtProvider(UserManager<ApplicationUser> userManager)
+        private readonly JwtSettings _jwtSettings;
+        public JwtProvider(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> settings)
         {
             _userManager = userManager;
+            _jwtSettings = settings.Value;
         }
-    
+
         public async Task<string> GenerateAsync(ApplicationUser user)
         {
-            var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersecretkey123")), SecurityAlgorithms.HmacSha256);
+            var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SigningKey)), SecurityAlgorithms.HmacSha256);
 
             var existingUser = await _userManager.FindByIdAsync(user.Id.ToString());
             var roles = await _userManager.GetRolesAsync(existingUser);
-            var expiresAt = DateTime.UtcNow.AddHours(1);
-            //var role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().Single();
+            var expiresAt = DateTime.UtcNow.AddMinutes(_jwtSettings.TokenDurationInMinutes);
             var claims = new Claim[]
-            { 
+            {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("role",roles.First()),
+                new Claim("role", roles.First()),
                 new Claim(JwtRegisteredClaimNames.Exp, expiresAt.ToString())
             };
 
             var token = new JwtSecurityToken(
-                "iss",
-                "aud",
+                _jwtSettings.ValidIssuer,
+                _jwtSettings.ValidAudience,
                 claims,
                 null,
                 expiresAt,

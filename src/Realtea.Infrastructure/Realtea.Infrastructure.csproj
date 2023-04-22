@@ -37,7 +37,6 @@
     <Folder Include="Handlers\" />
     <Folder Include="Handlers\Commands\" />
     <Folder Include="Handlers\Commands\Authorization\" />
-    <Folder Include="Authentication\" />
     <Folder Include="Results\" />
     <Folder Include="Results\Auth\" />
     <Folder Include="Handlers\Commands\User\" />
