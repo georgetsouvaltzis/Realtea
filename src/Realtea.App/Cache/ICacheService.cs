@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using Realtea.Infrastructure.Settings;
 using System.Text.Json;
 
 namespace Realtea.App.Cache
@@ -12,11 +14,12 @@ namespace Realtea.App.Cache
     public class CacheService : ICacheService
     {
         private readonly IMemoryCache _memoryCache;
-        private readonly TimeSpan TimeToLive = TimeSpan.FromMinutes(5);
+        private readonly CacheSettings _settings;
 
-        public CacheService(IMemoryCache memoryCache)
+        public CacheService(IMemoryCache memoryCache, IOptions<CacheSettings> cacheSettings)
         {
             _memoryCache = memoryCache;
+            _settings = cacheSettings.Value;
         }
 
         public void Set(string cacheKey, object valueToStore)
@@ -26,7 +29,7 @@ namespace Realtea.App.Cache
 
             var serializedData = JsonSerializer.Serialize(valueToStore);
 
-            _memoryCache.Set(cacheKey, serializedData, TimeToLive);
+            _memoryCache.Set(cacheKey, serializedData, TimeSpan.FromMinutes(_settings.CacheTimeToLiveInMinutes));
         }
 
         public void Remove(string cacheKey)

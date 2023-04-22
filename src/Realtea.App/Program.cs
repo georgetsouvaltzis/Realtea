@@ -32,6 +32,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<CacheSettings>(builder.Configuration.GetSection("CacheSettings"));
 
 builder.Services.AddAutoMapper(typeof(Program), typeof(AdvertisementToAdvertisementResultProfile));
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
