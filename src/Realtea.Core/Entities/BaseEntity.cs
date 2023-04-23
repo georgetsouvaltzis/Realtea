@@ -1,8 +1,8 @@
 ﻿namespace Realtea.Core.Entities
 {
-    public abstract class BaseEntity
+    public abstract record BaseEntity
     {
-        public BaseEntity()
+        protected BaseEntity()
         {
             CreatedAt = DateTimeOffset.Now;
         }

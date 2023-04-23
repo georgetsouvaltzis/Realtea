@@ -24,16 +24,16 @@ namespace Realtea.Core.Handlers.Queries.Advertisement
                 queryable = queryable.Where(x => x.DealType == request.DealType.Value);
 
             if (request.PriceFrom.HasValue)
-                queryable = queryable.Where(x => x.Price >= request.PriceFrom);
+                queryable = queryable.Where(x => x.Price.Value >= request.PriceFrom);
 
             if (request.PriceTo.HasValue)
-                queryable = queryable.Where(x => x.Price <= request.PriceTo);
+                queryable = queryable.Where(x => x.Price.Value <= request.PriceTo);
 
             if (request.SqFrom.HasValue)
-                queryable = queryable.Where(x => x.SquareMeter >= request.SqFrom);
+                queryable = queryable.Where(x => x.SquareMeter.Value >= request.SqFrom);
 
             if (request.SqTo.HasValue)
-                queryable = queryable.Where(x => x.SquareMeter <= request.SqTo);
+                queryable = queryable.Where(x => x.SquareMeter.Value <= request.SqTo);
 
             if (request.Location.HasValue)
                 queryable = queryable.Where(x => x.Location == request.Location.Value);

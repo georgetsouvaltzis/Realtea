@@ -8,7 +8,8 @@ namespace Realtea.App.Profiles
 	{
 		public AdvertisementResultToReadAdvertisementResponseProfile()
 		{
-			CreateMap<AdvertisementResult, ReadAdvertisementsResponse>();		
+			CreateMap<AdvertisementResult, ReadAdvertisementsResponse>()
+				.ForMember(dest => dest.AdvertisementType, opt => opt.MapFrom(src => src.AdvertisementType));
 		}
 	}
 }

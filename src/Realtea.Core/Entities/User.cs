@@ -1,26 +1,85 @@
 ﻿using Realtea.Core.Enums;
+using Realtea.Core.Exceptions;
+using Realtea.Core.ValueObjects;
 
 namespace Realtea.Core.Entities
 {
-    //public class User : IdentityUser<int>
-    public class User : BaseEntity
+    public record User : BaseEntity
     {
-        public string? FirstName { get; set; }
+        private User(string firstName, string lastName, string userName, string email)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            UserName = userName;
+            Email = email;
+        }
 
-        public string? LastName { get; set; }
+        public static User Create(string firstName, string lastName, string userName, string email)
+        {
+            if (string.IsNullOrEmpty(userName))
+                throw new ApiException(nameof(userName), FailureType.InvalidData);
 
-        public string? UserName { get; set; }
+            return new User(firstName, lastName, userName, email);
+        }
 
-        public string? Email { get; set; }
+        private readonly List<Advertisement> _advertisements = new List<Advertisement>();
 
-        public ICollection<Advertisement> Advertisements { get; set; }
+        public IReadOnlyCollection<Advertisement> Advertisements => _advertisements;
 
-        public UserType UserType { get; set; }
+        private readonly List<Payment> _payments = new List<Payment>();
 
-        public ICollection<Payment> Payments { get; set; }
+        public string? FirstName { get; private set; }
 
-        public UserBalance UserBalance { get; set; }
-        public int UserBalanceId { get; set; }
+        public string? LastName { get; private set; }
+
+        public string? UserName { get; private set; }
+
+        public string? Email { get; private set; }
+
+        public UserBalance UserBalance { get; private set; }
+
+        public void ChangeFirstName(string firstName)
+        {
+            if (string.IsNullOrEmpty(firstName))
+                throw new ApiException(nameof(firstName), FailureType.InvalidData);
+
+            FirstName = firstName;
+        }
+
+        public void ChangeLastName(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+                throw new ApiException(nameof(lastName), FailureType.InvalidData);
+
+            LastName = lastName;
+        }
+
+        public void ChangeEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                throw new ApiException(nameof(email), FailureType.InvalidData);
+
+            Email = email;
+        }
+
+        public void AddAd(Advertisement advertisement)
+        {
+            _advertisements.Add(advertisement);
+        }
+
+        public void RemoveAd(int advertisementId)
+        {
+            var existingAd = _advertisements.Find(x => x.Id == advertisementId);
+            if (existingAd == null)
+                throw new ApiException(nameof(existingAd), FailureType.Absent);
+
+            _advertisements.Remove(existingAd);
+        }
+
+        public void DeductAmount()
+        {
+            UserBalance.UpdateBalance(Money.Create(0.2m));
+        }
     }
 }
 

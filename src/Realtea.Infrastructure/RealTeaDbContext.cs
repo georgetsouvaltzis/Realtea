@@ -18,6 +18,24 @@ namespace Realtea.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Advertisement>()
+                .OwnsOne(p => p.Price, owned =>
+                {
+                    owned.Property(p => p.Value).HasColumnName("price");
+                });
+
+            modelBuilder
+                .Entity<Advertisement>()
+                .OwnsOne(p => p.SquareMeter, owned =>
+                {
+                    owned.Property(p => p.Value).HasColumnName("squareMeter");
+                });
+
+            modelBuilder
+                .Entity<UserBalance>()
+                .OwnsOne(p => p.Balance);
+
             modelBuilder.Entity<User>()
                 .HasOne(x => x.UserBalance)
                 .WithOne(x => x.User)

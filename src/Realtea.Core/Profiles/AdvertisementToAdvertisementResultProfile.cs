@@ -8,7 +8,9 @@ namespace Realtea.Core.Profiles
 	{
 		public AdvertisementToAdvertisementResultProfile()
 		{
-			CreateMap<Advertisement, AdvertisementResult>();
+			CreateMap<Advertisement, AdvertisementResult>()
+				.ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
+				.ForMember(dest => dest.SquareMeter, opt => opt.MapFrom(src => src.SquareMeter.Value));
 		}
 	}
 }

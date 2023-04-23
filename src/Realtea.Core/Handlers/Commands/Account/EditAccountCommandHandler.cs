@@ -16,17 +16,16 @@ namespace Realtea.Core.Handlers.Commands.Account
         {
 			var existingUser = await _userRepository.GetByIdAsync(request.UserId.ToString());
 
-            if (request.FirstName != null)
-                existingUser.FirstName = request.FirstName;
+            if(!string.IsNullOrEmpty(request.FirstName))
+                existingUser.ChangeFirstName(request.FirstName);
 
-            if (request.LastName != null)
-                existingUser.LastName = request.LastName;
+            if (!string.IsNullOrEmpty(request.LastName))
+                existingUser.ChangeLastName(request.LastName);
 
-            if (request.Email != null)
-                existingUser.Email = request.Email;
+            if (!string.IsNullOrEmpty(request.Email))
+                existingUser.ChangeEmail(request.Email);
 
             await _userRepository.UpdateAsync(existingUser);
-
         }
     }
 }

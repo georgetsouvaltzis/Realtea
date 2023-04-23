@@ -28,10 +28,7 @@ namespace Realtea.Infrastructure.Handlers.Commands.Authorization
             if (existingUser != null)
                 throw new ApiException($"{request.UserName} is taken.", FailureType.Conflict);
 
-            var newUser = new Realtea.Core.Entities.User
-            {
-                UserName = request.UserName,
-            };
+            var newUser = Core.Entities.User.Create(string.Empty, string.Empty, request.UserName, string.Empty);
 
             var result = await _userRepository.CreateAsync(newUser, request.Password);
 

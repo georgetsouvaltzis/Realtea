@@ -3,6 +3,7 @@ using Realtea.Core.Commands.Payment;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
+using Realtea.Core.ValueObjects;
 
 namespace Realtea.Core.Handlers.Commands.Payment
 {
@@ -22,13 +23,14 @@ namespace Realtea.Core.Handlers.Commands.Payment
             if (existingUser == null)
                 throw new ApiException($"User with ID: {request.UserId} does not exist.", FailureType.Absent);
 
-            await _paymentRepository.CreateAsync(new Entities.Payment
-            {
-                PaymentMadeAt = DateTimeOffset.UtcNow,
-                PaidAmount = 1.0m,
-                PaymentDetail = PaymentDetail.Card,
-                UserId = existingUser.Id,
-            });
+            // TODO: DO NOT FORGET ABOUT PAYMENT ID
+            await _paymentRepository.CreateAsync(Entities
+                .Payment
+                .Create(existingUser.Id,
+                PaymentDetail.Card,
+                DateTimeOffset.UtcNow,
+                1,
+                Money.Create(1.0m)));
         }
     }
 }

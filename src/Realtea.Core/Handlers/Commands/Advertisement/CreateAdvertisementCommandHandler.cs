@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Realtea.Core.Commands.Advertisement;
+using Realtea.Core.Entities;
 using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Results.Advertisement;
+using Realtea.Core.ValueObjects;
 
 namespace Realtea.Core.Handlers.Commands.Advertisement
 {
@@ -45,32 +47,28 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
             if (_advertisementRepository.HasExceededFreeAds(existingUser.Id) && !isInBrokerRole && request.AdvertisementType == AdvertisementType.Free)
                 throw new ApiException("Unable to add advertisement. You have reached your limit. Please upgrade your account type to Broker. Or consider using Paid ads.", FailureType.Insufficient);
 
-            if (request.AdvertisementType == AdvertisementType.Paid && !existingUser.UserBalance.IsCapableOfPayment)
+            if (request.AdvertisementType == AdvertisementType.Paid && !existingUser.UserBalance.IsCapableOfPayment())
             {
                 throw new ApiException("Insufficient balance.", FailureType.Insufficient);
             }
 
-            var newAdvertisement = new Realtea.Core.Entities.Advertisement
-            {
-                Name = request.Name,
-                UserId = existingUser.Id,
-                Description = request.Description,
-                DealType = request.DealType,
-                Location = request.Location,
-                SquareMeter = request.SquareMeter,
-            };
+            var newAdvertisement = Entities
+                .Advertisement
+                .Create(request.Name, request.Description, request.AdvertisementType, request.IsActive.HasValue ? request.IsActive.Value : false, existingUser.Id,
+                request.DealType,
+                Money.Create(request.Price),
+                Sq2.Create(request.SquareMeter),
+                request.Location);
 
             await _advertisementRepository.AddAsync(newAdvertisement);
 
             // Probably could be some kind of event to fire it and then update value of it.
-            await _paymentRepository.CreateAsync(new Entities.Payment
-            {
-                AdvertisementId = newAdvertisement.Id,
-                PaidAmount = 0.2m,
-                PaymentMadeAt = DateTimeOffset.Now,
-                PaymentDetail = PaymentDetail.Balance,
-                UserId = existingUser.Id,
-            });
+            await _paymentRepository.CreateAsync(Entities.Payment.Create(
+                newAdvertisement.Id,
+                PaymentDetail.Balance,
+                DateTimeOffset.Now,
+                existingUser.Id,
+                Money.Create(0.2m)));
 
             return new CreateAdvertisementResult
             {

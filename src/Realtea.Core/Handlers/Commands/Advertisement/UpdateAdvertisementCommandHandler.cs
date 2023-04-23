@@ -5,6 +5,7 @@ using Realtea.Core.Enums;
 using Realtea.Core.Exceptions;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Results.Advertisement;
+using Realtea.Core.ValueObjects;
 
 namespace Realtea.Core.Handlers.Commands.Advertisement
 {
@@ -26,47 +27,33 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
                 throw new ApiException($"Advertisement with ID: {request.Id} does not exist.", FailureType.Absent);
 
 
-            existingAd.Name = request.Name ?? existingAd.Name;
-            existingAd.Description = request.Description ?? existingAd.Description;
-            existingAd.IsActive = request.IsActive ?? existingAd.IsActive;
+            if (!string.IsNullOrEmpty(request.Name))
+                existingAd.ChangeName(request.Name);
 
+            if (!string.IsNullOrEmpty(request.Description))
+                existingAd.ChangeDescription(request.Description);
 
-            if(request.DealType != null)
-            {
-                existingAd.DealType = request.DealType.Value;
-            }
+            if (request.IsActive.HasValue)
+                existingAd.SetIsActive(request.IsActive.Value);
 
-            if(request.Location != null)
-            {
-                existingAd.Location = request.Location.Value;
-            }
+            if(request.DealType.HasValue)
+                existingAd.ChangeDealType(request.DealType.Value);
+            
 
-            if(request.Price != null)
-            {
-                existingAd.Price = request.Price.Value;
-            }
+            if(request.Location.HasValue)
+                existingAd.ChangeLocation(request.Location.Value);
 
-            if(request.SquareMeter != null)
-            {
-                existingAd.SquareMeter = request.SquareMeter.Value;
-            }
+            if(request.Price.HasValue)
+                existingAd.ChangePrice(Money.Create(request.Price.Value));
+
+            if (request.SquareMeter.HasValue)
+                existingAd.ChangeSq2(Sq2.Create(request.SquareMeter.Value));
 
             var modifiedAd = await _advertisementRepository.UpdateAsync(existingAd);
 
             var mapped = _mapper.Map<UpdateAdvertisementResult>(modifiedAd);
 
             return mapped;
-            //return new UpdateAdvertisementResult
-            //{
-            //    Name = modifiedAd.Name,
-            //    Description = modifiedAd.Description,
-            //    IsActive = modifiedAd.IsActive,
-            //    AdvertisementType = modifiedAd.AdvertisementType,
-            //    DealType = modifiedAd.DealType,
-            //    Location = modifiedAd.Location,
-            //    SquareMeter = modifiedAd.SquareMeter,
-            //    Price = modifiedAd.Price,
-            //};
         }
     }
 }

@@ -24,16 +24,11 @@ namespace Realtea.Infrastructure.Repositories
 
         public async Task InvalidateAsync(int id)
         {
-            //var existingAd = await GetByIdAsync(id);
+            var existingAd = await GetByIdAsync(id);
 
-            var existingAd = new Advertisement
-            {
-                Id = id,
-                IsActive = false,
-            };
-            //existingAd!.IsActive = false;
+            existingAd.SetIsActive(false);
 
-            _db.Entry<Advertisement>(existingAd).State = EntityState.Modified;
+            _db.Entry(existingAd).State = EntityState.Modified;
 
             await _db.SaveChangesAsync();
         }
@@ -52,15 +47,18 @@ namespace Realtea.Infrastructure.Repositories
             return _db
                 .Advertisements
                 .Include(x => x.User)
+                .Include(x => x.Price)
+                .Include(x => x.SquareMeter)
                 .AsQueryable();
-            
+
         }
         public async Task<Advertisement?> GetByIdAsync(int id)
         {
             return await _db
                 .Advertisements
                 .Include(x => x.User)
-                .AsNoTracking()
+                .Include(x => x.Price)
+                .Include(x => x.SquareMeter)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
 

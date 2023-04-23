@@ -17,7 +17,8 @@ namespace Realtea.Infrastructure.Repositories
         public async Task<int> CreateAsync(Payment payment)
         {
             var existingUser = await _userRepository.GetByIdAsync(payment.UserId.ToString());
-            existingUser.UserBalance.Balance -= 0.20m;
+            existingUser.DeductAmount();
+            //existingUser.UserBalance.Balance -= 0.20m;
             await _db.Payments.AddAsync(payment);
             await _db.SaveChangesAsync();
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Realtea.Core.Entities;
 using Realtea.Core.Interfaces.Repositories;
+using Realtea.Core.ValueObjects;
 using Realtea.Infrastructure.Identity;
 
 namespace Realtea.Infrastructure.Repositories
@@ -13,8 +14,7 @@ namespace Realtea.Infrastructure.Repositories
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RealTeaDbContext _dbContext;
-        private readonly RoleManager<ApplicationRole> _roleManager;
-        public UserRepository(UserManager<ApplicationUser> userManager, RealTeaDbContext dbContext, RoleManager<ApplicationRole> roleManager)
+        public UserRepository(UserManager<ApplicationUser> userManager, RealTeaDbContext dbContext)
         {
             _userManager = userManager;
             _dbContext = dbContext;
@@ -27,16 +27,12 @@ namespace Realtea.Infrastructure.Repositories
                 UserName = user.UserName,
             };
 
-            var result = await _userManager.CreateAsync(newApplicationUser, password);
+            _= await _userManager.CreateAsync(newApplicationUser, password);
 
             user.Id = newApplicationUser.Id;
 
             await _dbContext.AddAsync(user);
-            await _dbContext.AddAsync(new UserBalance
-            {
-                Balance = 1.00m,
-                UserId = user.Id,
-            });
+            await _dbContext.AddAsync(UserBalance.Create(user.Id, Money.Create(1.0m)));
 
             await _userManager.AddToRoleAsync(newApplicationUser, "Normal");
             await _dbContext.SaveChangesAsync();
@@ -59,14 +55,7 @@ namespace Realtea.Infrastructure.Repositories
 
             var existingBalance = _dbContext.Set<UserBalance>().Single(x => x.UserId == existingUser.Id);
 
-            return new User
-            {
-                Id = existingUser.Id,
-                //FirstName = existingUser.FirstName,
-                //LastName = existingUser.LastName,
-                UserName = existingUser.UserName,
-                UserBalance = existingBalance,
-            };
+            return User.Create(existingUser.FirstName, existingUser!.LastName, existingUser.UserName, existingUser.Email);
         }
 
         public async Task<User> GetByUsernameAsync(string username)
@@ -75,13 +64,7 @@ namespace Realtea.Infrastructure.Repositories
 
             if (existingUser == null) return null;
 
-            return new User
-            {
-                Id = existingUser.Id,
-                //FirstName = existingUser.FirstName,
-                //LastName = existingUser.LastName,
-                UserName = existingUser.UserName,
-            };
+            return User.Create(existingUser.FirstName, existingUser!.LastName, existingUser.UserName, existingUser.Email);
         }
 
         public async Task<bool> IsInBrokerRoleAsync(int userId)

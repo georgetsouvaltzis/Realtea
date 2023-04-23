@@ -17,6 +17,8 @@ using Realtea.Infrastructure.Seeder;
 using Realtea.Infrastructure.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
