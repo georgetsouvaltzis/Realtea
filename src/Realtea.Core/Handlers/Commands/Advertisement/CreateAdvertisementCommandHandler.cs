@@ -64,10 +64,10 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
 
             // Probably could be some kind of event to fire it and then update value of it.
             await _paymentRepository.CreateAsync(Entities.Payment.Create(
-                newAdvertisement.Id,
+                existingUser.Id,
                 PaymentDetail.Balance,
                 DateTimeOffset.Now,
-                existingUser.Id,
+                newAdvertisement.Id,
                 Money.Create(0.2m)));
 
             return new CreateAdvertisementResult
