@@ -1,4 +1,6 @@
 ﻿using Realtea.App.Enums;
+using Realtea.App.JsonConverters;
+using System.Text.Json.Serialization;
 
 namespace Realtea.App.Responses.Advertisement
 {
@@ -8,15 +10,17 @@ namespace Realtea.App.Responses.Advertisement
 
         public string? Description { get; set; }
 
-        // DO NOT FORGET TO CHANGE IT.
+        [JsonConverter(typeof(EnumConverter<AdvertisementTypeEnum>))]
         public AdvertisementTypeEnum? AdvertisementType { get; set; }
 
+        [JsonConverter(typeof(EnumConverter<DealTypeEnum>))]
         public DealTypeEnum? DealType { get; set; }
 
         public decimal? Price { get; set; }
 
         public decimal? SquareMeter { get; set; }
 
+        [JsonConverter(typeof(EnumConverter<LocationEnum>))]
         public LocationEnum? Location { get; set; }
 
         public bool? IsActive { get; set; }

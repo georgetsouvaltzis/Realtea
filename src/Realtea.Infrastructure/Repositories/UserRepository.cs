@@ -53,9 +53,7 @@ namespace Realtea.Infrastructure.Repositories
 
             if (existingUser == null) return null;
 
-            var existingBalance = _dbContext.Set<UserBalance>().Single(x => x.UserId == existingUser.Id);
-
-            return User.Create(existingUser.FirstName, existingUser!.LastName, existingUser.UserName, existingUser.Email);
+            return _dbContext.DomainUsers.Include(x => x.UserBalance).First(x => x.Id == Convert.ToInt32(userId));
         }
 
         public async Task<User> GetByUsernameAsync(string username)

@@ -79,7 +79,9 @@ namespace Realtea.App.Controllers.V1
                 return Forbid();
             }
 
-            await Mediator.Send(request);
+            var command = new DeleteAdvertisementCommand { Id = CurrentUserId };
+
+            await Mediator.Send(command);
 
             return NoContent();
         }

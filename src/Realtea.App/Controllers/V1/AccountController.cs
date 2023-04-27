@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Requests.Account;
 using Realtea.Core.Commands.Account;
+using Realtea.Core.Commands.Payment;
 using Realtea.Infrastructure.Commands.User;
 
 namespace Realtea.App.Controllers.V1
@@ -44,6 +45,15 @@ namespace Realtea.App.Controllers.V1
         public async Task<ActionResult> Delete()
         {
             await Mediator.Send(new DeleteAccountCommand { UserId = CurrentUserId });
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("add-balance")]
+        public async Task<ActionResult> AddBalance()
+        {
+            await Mediator.Send(new AddBalanceCommand { UserId = CurrentUserId });
+
             return NoContent();
         }
     }

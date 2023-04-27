@@ -16,6 +16,8 @@ namespace Realtea.Infrastructure
 
         public DbSet<Payment> Payments { get; set; }
 
+        public DbSet<User> DomainUsers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -34,7 +36,10 @@ namespace Realtea.Infrastructure
 
             modelBuilder
                 .Entity<UserBalance>()
-                .OwnsOne(p => p.Balance);
+                .OwnsOne(p => p.Balance, owned =>
+                {
+                    owned.Property(p => p.Value).HasColumnName("balance");
+                });
 
             modelBuilder.Entity<User>()
                 .HasOne(x => x.UserBalance)
