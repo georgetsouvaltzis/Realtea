@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Realtea.App": {
+    "Realtea.Api": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5000",
