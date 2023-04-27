@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3DAD3C9C-CA88-4536-8FF2-846F14A1A90F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtea.App", "Realtea.App\Realtea.App.csproj", "{001B7878-97FB-4EAD-836B-CF4B1B3049F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtea.Api", "Realtea.Api\Realtea.Api.csproj", "{001B7878-97FB-4EAD-836B-CF4B1B3049F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Realtea.Infrastructure", "Realtea.Infrastructure\Realtea.Infrastructure.csproj", "{66F35ABA-4535-4E70-8647-3F89EFF85783}"
 EndProject
