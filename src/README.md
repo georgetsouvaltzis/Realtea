@@ -13,3 +13,4 @@ Real estate-like WEB API built with .NET 6 using Clean Architecture.
 
 - Logging
 - Swagger
+- Healthchecks
