@@ -7,9 +7,9 @@ Real estate-like WEB API built with .NET 6 using Clean Architecture.
 - Authentication & Authorization using JWT + RBAC system and Resource based authorization.
 - server-side caching for GET endpoints
 - Data Storage is In-Memory.
+- Docker support
 
 #### Things to implement:
 
 - Logging
 - Swagger
-- Docker
