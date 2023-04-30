@@ -5,6 +5,7 @@ using Realtea.Core.Interfaces.Repositories;
 
 namespace Realtea.Infrastructure.Repositories
 {
+    /// <inheritdoc/>
     public class AdvertisementRepository : IAdvertisementRepository
     {
         private readonly RealTeaDbContext _db;
@@ -14,6 +15,7 @@ namespace Realtea.Infrastructure.Repositories
             _db = dbContext;
         }
 
+        /// <inheritdoc/>
         public async Task<int> AddAsync(Advertisement advertisement)
         {
             await _db.AddAsync(advertisement);
@@ -22,6 +24,7 @@ namespace Realtea.Infrastructure.Repositories
             return advertisement.Id;
         }
 
+        /// <inheritdoc/>
         public async Task InvalidateAsync(int id)
         {
             var existingAd = await GetByIdAsync(id);
@@ -33,6 +36,7 @@ namespace Realtea.Infrastructure.Repositories
             await _db.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<Advertisement>> GetAllAsync()
         {
             return await _db
@@ -42,6 +46,7 @@ namespace Realtea.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public IQueryable<Advertisement?> GetAsQueryable()
         {
             return _db
@@ -52,6 +57,8 @@ namespace Realtea.Infrastructure.Repositories
                 .AsQueryable();
 
         }
+
+        /// <inheritdoc/>
         public async Task<Advertisement?> GetByIdAsync(int id)
         {
             return await _db
@@ -64,6 +71,7 @@ namespace Realtea.Infrastructure.Repositories
 
         }
 
+        /// <inheritdoc/>
         public async Task<Advertisement> UpdateAsync(Advertisement advertisement)
         {
             _db.Advertisements.Update(advertisement);
@@ -73,6 +81,7 @@ namespace Realtea.Infrastructure.Repositories
             return advertisement;
         }
 
+        /// <inheritdoc/>
         public bool HasExceededFreeAds(int userId)
         {
             const int FreeAdsLimit = 5;

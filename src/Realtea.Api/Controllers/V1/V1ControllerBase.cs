@@ -4,6 +4,10 @@ using Realtea.App.HttpContextWrapper;
 
 namespace Realtea.App.Controllers.V1
 {
+    /// <summary>
+    /// V1 Controller base which contains frequently-accessed information
+    /// AND common route for inherited controllers.
+    /// </summary>
     [Route("/api/v1/[controller]")]
     [Produces("application/json")]
     [Consumes("application/json")]

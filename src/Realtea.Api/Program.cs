@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -21,6 +22,7 @@ using Realtea.Infrastructure.Settings;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -54,10 +56,13 @@ builder.Services.AddSwaggerGen(opt =>
         BearerFormat = "JWT"
     });
 
+    opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+
     opt.ExampleFilters();
     opt.DocumentFilter<EnumValuesDocumentFilter>();
     opt.OperationFilter<Realtea.Api.Filters.SecurityRequirementsOperationFilter>();
 }).AddSwaggerExamplesFromAssemblyOf(typeof(Program));
+
 builder.Services.AddMemoryCache();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));

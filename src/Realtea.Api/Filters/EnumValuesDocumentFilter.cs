@@ -17,7 +17,6 @@ namespace Realtea.Api.Filters
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-
             foreach (var schema in swaggerDoc.Components.Schemas)
             {
                 if (_applicableTypes.Any(x => x.Key.Name.Equals(schema.Key, StringComparison.OrdinalIgnoreCase)) && schema.Value.Enum.Count > 0)
@@ -31,22 +30,6 @@ namespace Realtea.Api.Filters
 
                         schema.Value.Enum[i] = new OpenApiString(parsedValue.ToString());
                     }
-                }
-                if (schema.Value.Enum != null && schema.Value.Enum.Count > 0)
-                {
-                    var enumType = Type.GetType(schema.Value.Enum[0].ToString());
-                    //if (enumType != null && enumType.IsEnum && customEnumValues.ContainsKey(enumType))
-                    //{
-                    //    // Replace each default enum value with its custom value
-                    //    for (int i = 0; i < schema.Enum.Count; i++)
-                    //    {
-                    //        string enumValue = schema.Enum[i].ToString();
-                    //        if (customEnumValues[enumType].ContainsKey(enumValue))
-                    //        {
-                    //            schema.Enum[i] = new OpenApiString(customEnumValues[enumType][enumValue]);
-                    //        }
-                    //    }
-                    //}
                 }
             }
         }
