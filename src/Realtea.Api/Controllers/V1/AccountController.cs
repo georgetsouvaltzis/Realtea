@@ -1,15 +1,18 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Realtea.Api;
+using Realtea.Api.Attributes;
+using Realtea.Api.Examples;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Requests.Account;
 using Realtea.Core.Commands.Account;
 using Realtea.Core.Commands.Payment;
 using Realtea.Infrastructure.Commands.User;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Realtea.App.Controllers.V1
 {
-    [Authorize]
     public class AccountController : V1ControllerBase
     {
         public AccountController(IMediator mediator, IHttpContextAccessorWrapper httpContextAccessorWrapper) : base(mediator, httpContextAccessorWrapper)
@@ -17,6 +20,7 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpPatch]
+        [BearerAuthorize]
         [Route("upgrade")]
         public async Task<ActionResult> UpgradeAccount()
         {
@@ -26,6 +30,8 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpPatch]
+        [BearerAuthorize]
+        [SwaggerRequestExample(typeof(EditAccountRequest), typeof(EditAccountRequestExample))]
         public async Task<ActionResult> Edit([FromBody] EditAccountRequest request)
         {
             var command = new EditAccountCommand
@@ -42,6 +48,7 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpDelete]
+        [BearerAuthorize]
         public async Task<ActionResult> Delete()
         {
             await Mediator.Send(new DeleteAccountCommand { UserId = CurrentUserId });
@@ -49,6 +56,7 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpPost]
+        [BearerAuthorize]
         [Route("add-balance")]
         public async Task<ActionResult> AddBalance()
         {

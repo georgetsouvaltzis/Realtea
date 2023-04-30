@@ -1,9 +1,12 @@
-﻿using MediatR;
+﻿using System.Net;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Realtea.Api.Examples;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Requests.Auth;
 using Realtea.App.Responses.Auth;
 using Realtea.Infrastructure.Commands.Authorization;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Realtea.App.Controllers.V1
 {
@@ -15,6 +18,7 @@ namespace Realtea.App.Controllers.V1
 
         [HttpPost]
         [Route("register")]
+        [SwaggerRequestExample(typeof(RegisterUserRequest), typeof(RegisterUserRequestExample))]
         public async Task<ActionResult> Register([FromBody] RegisterUserRequest request)
         {
             var command = new RegisterUserCommand
@@ -31,6 +35,7 @@ namespace Realtea.App.Controllers.V1
 
         [HttpPost]
         [Route("generatetoken")]
+        [SwaggerRequestExample(typeof(LoginUserRequest), typeof(LoginUserRequestExample))]
         public async Task<ActionResult> GenerateToken([FromBody] LoginUserRequest request)
         {
             var command = new LoginUserCommand

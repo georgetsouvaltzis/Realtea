@@ -14,7 +14,7 @@ namespace Realtea.Core.Handlers.Commands.Advertisement
         private readonly IAdvertisementRepository _advertisementRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IUserRepository _userRepository;
-
+       
         public CreateAdvertisementCommandHandler(IAdvertisementRepository advertisementRepository,
             IUserRepository userRepository,
             IPaymentRepository paymentRepository)

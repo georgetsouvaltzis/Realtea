@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Realtea.Api;
+using Realtea.Api.Attributes;
+using Realtea.Api.Examples;
 using Realtea.App.Filters;
 using Realtea.App.HttpContextWrapper;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
@@ -9,6 +13,7 @@ using Realtea.App.Requests.Advertisement;
 using Realtea.App.Responses.Advertisement;
 using Realtea.Core.Commands.Advertisement;
 using Realtea.Core.Queries;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Realtea.App.Controllers.V1
 {
@@ -54,7 +59,8 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpPost]
-        [Authorize]
+        [BearerAuthorize]
+        [SwaggerRequestExample(typeof(CreateAdvertisementRequestExample), typeof(CreateAdvertisementRequest))]
         public async Task<ActionResult> Add([FromBody] CreateAdvertisementRequest request)
         {
             var command = _mapper.Map<CreateAdvertisementCommand>(request);
@@ -66,7 +72,7 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpDelete]
-        [Authorize]
+        [BearerAuthorize]
         [Route("{id:int}")]
         public async Task<ActionResult> Delete([FromRoute] DeleteAdvertisementRequest request)
         {
@@ -87,8 +93,9 @@ namespace Realtea.App.Controllers.V1
         }
 
         [HttpPut]
-        [Authorize]
+        [BearerAuthorize]
         [Route("{id:int}")]
+        [SwaggerRequestExample(typeof(EditAdvertisementRequestExample), typeof(UpdateAdvertisementRequest))]
         public async Task<ActionResult> Update(int id, [FromBody] UpdateAdvertisementRequest request)
         {
             var existingAd = await Mediator.Send(new ReadAdvertisementQuery { Id = id });

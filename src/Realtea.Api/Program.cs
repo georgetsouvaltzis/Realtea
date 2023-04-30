@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using Realtea.Api.Filters;
 using Realtea.App.Cache;
 using Realtea.App.Filters;
 using Realtea.App.HttpContextWrapper;
@@ -9,12 +12,14 @@ using Realtea.App.Identity.Authorization.Handlers.Advertisement;
 using Realtea.App.Identity.Authorization.Requirements.Advertisement;
 using Realtea.Core.Interfaces.Repositories;
 using Realtea.Core.Profiles;
-using Realtea.Infrastructure;   
+using Realtea.Infrastructure;
 using Realtea.Infrastructure.Authentication;
 using Realtea.Infrastructure.Identity;
 using Realtea.Infrastructure.Repositories;
 using Realtea.Infrastructure.Seeder;
 using Realtea.Infrastructure.Settings;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
@@ -30,7 +35,29 @@ builder.Services.AddControllers(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Realtea API V1",
+        Version = "V1",
+        Description = "Sample real-estate like API.",
+    });
+
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Authorization header using the Bearer scheme.",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
+    });
+
+    opt.ExampleFilters();
+    opt.DocumentFilter<EnumValuesDocumentFilter>();
+    opt.OperationFilter<Realtea.Api.Filters.SecurityRequirementsOperationFilter>();
+}).AddSwaggerExamplesFromAssemblyOf(typeof(Program));
 builder.Services.AddMemoryCache();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
@@ -51,8 +78,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     .AddEntityFrameworkStores<RealTeaDbContext>();
 
 builder.Services.AddAuthentication(auth =>
-{
+{  
     auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
     auth.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -94,7 +122,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IHttpContextAccessorWrapper, HttpContextAccessorWrapper>();
 
 builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementDeleteHandler>();
-builder.Services.AddScoped<IAuthorizationHandler,IsEligibleForAdvertisementUpdateAuthHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IsEligibleForAdvertisementUpdateAuthHandler>();
 builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
@@ -110,6 +138,7 @@ var app = builder.Build();
 await DatabaseInitializer.InitializeAsync(app.Services);
 
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
