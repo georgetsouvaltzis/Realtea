@@ -18,8 +18,13 @@ Real estate-like WEB API built with .NET 6 using Clean Architecture.
 
 - Logging
 <<<<<<< HEAD
+<<<<<<< HEAD
 - Swagger
 - Healthchecks
 =======
 - Healthchecks
 >>>>>>> b0405cb (Finished Swagger implementation and added comments for neccessary classes)
+=======
+- Healthchecks
+- Currently no cache invalidation.
+>>>>>>> 45e161b (Updated readme)
